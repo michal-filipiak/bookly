@@ -121,12 +121,26 @@ public class UserService implements UserClient
         return user;
     }
 
+    @Override
     public List<User> getUsers(Optional<String> login)
     {
         if(login.isPresent() && !login.get().equals(""))
             return userRepository.findAllByLoginContains(login.get());
         else
             return userRepository.findAll();
+    }
+
+    @Override
+    public boolean deleteUser(long id)
+    {
+        boolean deleted = false;
+        if (userRepository.existsById(id))
+        {
+            userRepository.deleteById(id);
+            log.info("User with id {} deleted", id);
+            deleted = true;
+        }
+        return deleted;
     }
 
 }

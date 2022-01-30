@@ -68,6 +68,19 @@ public class UserController
         return ResponseEntity.ok(user);
     }
 
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<String> deleteUser(@RequestHeader HttpHeaders headers, @PathVariable("id") long id)
+    {
+        if(securityService.Authenticate(headers)){
+            return userClient.deleteUser(id)
+                    ? ResponseEntity.ok("User deleted")
+                    : ResponseEntity.badRequest().body(String.format("User with id %s does not exist.", id));
+        }
+        else{
+            return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     @GetMapping(path = "")
     public ResponseEntity<List<User>> getUsers(@RequestHeader HttpHeaders headers, @RequestParam Optional<String> login){
         if(securityService.Authenticate(headers)){
