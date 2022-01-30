@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +39,8 @@ public class ParkingSlotController
     {}
 
     @GetMapping(path = "")
-    public ResponseEntity<List<ParkingSlot>> getParkingSlot(@RequestHeader HttpHeaders httpHeaders, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> startDate,
-                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)Optional<LocalDateTime> endDate,
+    public ResponseEntity<List<ParkingSlot>> getParkingSlot(@RequestHeader HttpHeaders httpHeaders, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> startDate,
+                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> endDate,
                                                       @RequestParam Optional<String> location)
     {
         if(securityService.Authenticate(httpHeaders))
