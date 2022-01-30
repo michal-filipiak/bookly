@@ -11,29 +11,63 @@ import {
 import { Button } from "react-native-elements/dist/buttons/Button";
 import CarFilter from "./carFilterView";
 
-export default function Carly({ navigation }) {
+const CARS_URL = "https://bookly.azurewebsites.net/cars";
+const START_DATE = new Date().toISOString().substring(0, 10);
+const END_DATE = new Date(
+  new Date().getFullYear(),
+  new Date().getMonth(),
+  new Date().getDate() + 7
+)
+  .toISOString()
+  .substring(0, 10);
+
+const getQueryString = (params) => {
+  const queries = params;
+  for (var key in queries) {
+    if (!queries[key] && queries[key] !== 0) {
+      delete queries[key];
+    }
+  }
+  return Object.keys(queries)
+    .reduce((result, key) => {
+      return [
+        ...result,
+        `${encodeURIComponent(key)}=${encodeURIComponent(queries[key])}`,
+      ];
+    }, [])
+    .join("&");
+};
+
+export default function Carly({ navigation, route }) {
   const icon = require("../../assets/favicon.png");
-  const [isLoading, setLoading] = useState(true);
-  const [dataSource,setDataSource] = useState(null);
+  const [startDate, setStartDate] = useState(START_DATE);
+  const [endDate, setEndDate] = useState(END_DATE);
+  //const [model,setModel] = useState('');
 
-  //const [startDate,setStartDate] = useState(new Date().toISOString().substring(0,10));
-  const [startDate,setStartDate] = useState(new Date().toISOString());
-  const [endDate, setEndDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+7).toISOString());
+  const [isLoading, setLoading] = useState(false);
+  const [dataSource, setDataSource] = useState(null);
+  const [filters, setFilters] = useState({
+    startDate: startDate,
+    endDate: endDate,
+  });
 
-  const CARS_URL = "http://localhost:8081/cars?startDate=2022-12-30T11:11:11&endDate=2022-12-31T11:11:11";
-  
-  useEffect(() => {
-    getBookings();
-  }, []);
-  async function getBookings() {
-    await fetch(
-      CARS_URL,
-      {
-        headers: {
-          Authorization: "123",
-        },
-      }
-    )
+  async function getCars(filters) {
+    setLoading(true);
+    const extraStringToDate = "T00:00:00";
+
+    const parameters = {
+      //pageNum: 0,
+      maxNum: 50,
+      startDate: filters.startDate.concat(extraStringToDate),
+      endDate: filters.endDate.concat(extraStringToDate),
+      location: filters.location,
+    };
+
+    await fetch(`${CARS_URL}?${getQueryString(parameters)}`, {
+      headers: {
+        Authorization: route.params.token,
+      },
+    })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -48,7 +82,11 @@ export default function Carly({ navigation }) {
       });
   }
 
-
+  useEffect(() => {
+    getCars(filters);
+    setStartDate(filters.startDate);
+    setEndDate(filters.endDate);
+  }, [filters]);
 
   return isLoading ? (
     <View style={styles.loadingView}>
@@ -56,7 +94,22 @@ export default function Carly({ navigation }) {
     </View>
   ) : (
     <SafeAreaView style={styles.container}>
-      <CarFilter />
+      <CarFilter
+        startDate={startDate}
+        endDate={endDate}
+        onSetFilters={(filters) => {
+          setFilters(filters);
+        }}
+        onResetFilters={() =>
+          setFilters({
+            startDate: START_DATE,
+            endDate: END_DATE,
+            location: "",
+            carName: "",
+            carModel: "",
+          })
+        }
+      />
       <FlatList
         data={dataSource}
         renderItem={({ item }) => (
