@@ -1,10 +1,20 @@
 package com.example.Tuesday_Bookly.controller;
 
+import com.example.Tuesday_Bookly.models.Flat;
 import com.example.Tuesday_Bookly.security.services.SecurityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -25,8 +35,8 @@ public class FlatController
 
     @GetMapping(path = "")
     public ResponseEntity<List<Flat>> getFlats(@RequestHeader HttpHeaders httpHeaders, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> startDate,
-                                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)Optional<LocalDateTime> endDate,
-                                             @RequestParam Optional<String> location)
+                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)Optional<LocalDateTime> endDate,
+                                               @RequestParam Optional<String> location)
     {
         if(securityService.Authenticate(httpHeaders))
         {
