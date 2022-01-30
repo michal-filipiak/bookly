@@ -70,19 +70,19 @@ public class CarController
 
             ResponseEntity<List<Car>> response = restTemplate.exchange(url.encode().toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<List<Car>>() {});
 
-            for(Car car : response.getBody())
-            {
-                List<String> images = car.getImages();
-                List<BufferedImage> parsedImages = new ArrayList<>();
-                for(int i =0; i < car.getImages().size(); i++)
-                {
-                    ResponseEntity<byte[]> bytes = restTemplate.exchange("https://pw2021-carly-backend.azurewebsites.net/V1/images/" + images.get(i), HttpMethod.GET, entity, byte[].class);
-                    ByteArrayInputStream stream = new ByteArrayInputStream(bytes.getBody());
-                    BufferedImage image = ImageIO.read(stream);
-                    parsedImages.add(image);
-                }
-                car.setParsedImage(parsedImages);
-            }
+//            for(Car car : response.getBody())
+//            {
+//                List<String> images = car.getImages();
+//                List<BufferedImage> parsedImages = new ArrayList<>();
+//                for(int i =0; i < car.getImages().size(); i++)
+//                {
+//                    ResponseEntity<byte[]> bytes = restTemplate.exchange("https://pw2021-carly-backend.azurewebsites.net/V1/images/" + images.get(i), HttpMethod.GET, entity, byte[].class);
+//                    ByteArrayInputStream stream = new ByteArrayInputStream(bytes.getBody());
+//                    BufferedImage image = ImageIO.read(stream);
+//                    parsedImages.add(image);
+//                }
+//                car.setParsedImage(parsedImages);
+//            }
 
             return response;
         }
