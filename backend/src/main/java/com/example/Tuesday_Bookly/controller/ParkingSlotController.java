@@ -15,7 +15,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +38,8 @@ public class ParkingSlotController
     {}
 
     @GetMapping(path = "")
-    public ResponseEntity<List<ParkingSlot>> getParkingSlot(@RequestHeader HttpHeaders httpHeaders, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> startDate,
-                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> endDate,
+    public ResponseEntity<List<ParkingSlot>> getParkingSlot(@RequestHeader HttpHeaders httpHeaders, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> startDate,
+                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)Optional<LocalDateTime> endDate,
                                                       @RequestParam Optional<String> location)
     {
         if(securityService.Authenticate(httpHeaders))
@@ -52,9 +51,9 @@ public class ParkingSlotController
             UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl("https://parkly-2022.azurewebsites.net/items");
 
             if(startDate.isPresent())
-                url.queryParam("startDate", startDate.get());
+                url.queryParam("startDate", startDate.get().atZone(ZoneOffset.UTC));
             if(endDate.isPresent())
-                url.queryParam("endDate", endDate.get());
+                url.queryParam("endDate", endDate.get().atZone(ZoneOffset.UTC));
             if(location.isPresent())
                 url.queryParam("location", location);
 
