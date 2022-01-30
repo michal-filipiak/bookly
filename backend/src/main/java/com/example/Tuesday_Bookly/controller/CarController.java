@@ -60,7 +60,7 @@ public class CarController
             if(model.isPresent())
                 url.queryParam("model", model);
             if(carName.isPresent())
-                url.queryParam("model", carName);
+                url.queryParam("carName", carName);
 
             ResponseEntity<List<Car>> response = restTemplate.exchange(url.encode().toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<List<Car>>() {});
             return response;

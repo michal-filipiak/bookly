@@ -57,6 +57,9 @@ public class ParkingSlotController
             if(location.isPresent())
                 url.queryParam("location", location);
 
+            //get active only
+            url.queryParam("filter", "active");
+
 
 
             ResponseEntity<List<ParkingSlot>> response = restTemplate.exchange(url.encode().toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<List<ParkingSlot>>() {});
