@@ -30,7 +30,7 @@ export default function Carly({ navigation, route }) {
   const [carName, setCarName] = useState("");
   const [location, setLocation] = useState("");
 
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [paginationCount, setCount] = useState(0);
   const [dataSource, setDataSource] = useState(null);
   const [filters, setFilters] = useState({
@@ -132,7 +132,7 @@ export default function Carly({ navigation, route }) {
 
               <Button
                 title="Details"
-                onPress={() => navigation.navigate("CarDetails", item)}
+                onPress={() => navigation.navigate("CarDetails", {item: item,startDate: startDate, endDate: endDate})}
                 buttonStyle={styles.buttonStyle}
                 containerStyle={styles.buttonContainer}
               />
