@@ -121,14 +121,12 @@ public class UserService implements UserClient
         return user;
     }
 
-    public List<User> getUsers(String login){
-        if(login.equals("")){
-            List<User> usersList = userRepository.findAll();
-            return usersList;
-        }
-        else{
-            return userRepository.findAllByLoginContains(login);
-        }
+    public List<User> getUsers(Optional<String> login)
+    {
+        if(login.isPresent() && !login.get().equals(""))
+            return userRepository.findAllByLoginContains(login.get());
+        else
+            return userRepository.findAll();
     }
 
 }

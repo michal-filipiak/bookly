@@ -9,6 +9,6 @@ public interface UserClient
 {
     User addUser(User user);
     User updatePassword(User user, String password);
-    List<User> getUsers(String login);
+    List<User> getUsers(Optional<String> login);
     void setPasswordEncoder(PasswordEncoder passwordEncoder);
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -68,7 +69,7 @@ public class UserController
     }
 
     @GetMapping(path = "")
-    public ResponseEntity<List<User>> getUsers(@RequestHeader HttpHeaders headers, @RequestParam String login){
+    public ResponseEntity<List<User>> getUsers(@RequestHeader HttpHeaders headers, @RequestParam Optional<String> login){
         if(securityService.Authenticate(headers)){
             List<User> usersList = userClient.getUsers(login);
             return ResponseEntity.ok(usersList);
@@ -77,6 +78,7 @@ public class UserController
             return new ResponseEntity<List<User>>(HttpStatus.UNAUTHORIZED);
         }
     }
+
     private void authenticate(String username, String password) throws Exception
     {
         try
