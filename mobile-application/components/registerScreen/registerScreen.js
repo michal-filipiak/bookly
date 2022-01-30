@@ -20,7 +20,7 @@ export default function RegisterScreen({navigation}) {
         password: password,
       })
     };
-    const response = await fetch('http://localhost:8080/users/add',requestOptions).then(response => response.json())
+    const response = await fetch('https://bookly.azurewebsites.net/users/add',requestOptions).then(response => response.json())
     if(login.length === 0 || password.length === 0 || firstName.length === 0 || lastName.length === 0) {
       showMessage({
         message: "Please fill all fields",
