@@ -1,7 +1,6 @@
 import React from "react";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Button } from "react-native";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { StyleSheet} from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./components/loginScreen/loginScreen";
 import Flatly from "./components/flatly/flatly";
@@ -14,6 +13,9 @@ import CarDetails from "./components/carly/carDetails";
 import FlatDetails from "./components/flatly/flatDetails";
 import ParkingDetails from "./components/parkly/parkingDetails";
 import Booked from "./components/booked/booked";
+import { LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs();
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -21,7 +23,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   const [token, setToken] = React.useState("");
 
-  function menuTabs() {
+  function MenuTabs() {
     return (
       <Tab.Navigator screenOptions={{ headerShown: false }}>
         <Tab.Screen name="Parkly" component={Parkly} initialParams={{ token: token }}/>
@@ -49,7 +51,7 @@ export default function App() {
         />
         <Stack.Screen
           name="Logged"
-          component={menuTabs}
+          component={MenuTabs}
           options={{ title: "", headerBackTitle: "Logout" }}
         />
         <Stack.Screen
