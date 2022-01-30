@@ -44,7 +44,7 @@ public class CarController
         {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDM1NTczMjYsImlhdCI6MTY0MzQ3MDkyNn0.YPjsaecbpFkuyDt5pAyeKe3gLcmX_1y9jM08qLQ3XmeHNjHC6WcTA9gIT-KikQRNUteVBAqDe3MEFWf9L2aFYw");
+            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDM2NDcyNDcsImlhdCI6MTY0MzU2MDg0N30.dVX5tyVtmigVBTYfaYUKW3R3I6TS9_LusQOdAUvGexIM-b5jVD_YlmfdaMg2YhAZ85937kZJnVXsRGYutFdZkw");
             HttpEntity<Void> entity = new HttpEntity<>(headers);
             UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl("https://pw2021-carly-backend.azurewebsites.net/V1/cars");
 
@@ -69,7 +69,7 @@ public class CarController
         {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDM1NTczMjYsImlhdCI6MTY0MzQ3MDkyNn0.YPjsaecbpFkuyDt5pAyeKe3gLcmX_1y9jM08qLQ3XmeHNjHC6WcTA9gIT-KikQRNUteVBAqDe3MEFWf9L2aFYw");
+            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDM2NDcyNDcsImlhdCI6MTY0MzU2MDg0N30.dVX5tyVtmigVBTYfaYUKW3R3I6TS9_LusQOdAUvGexIM-b5jVD_YlmfdaMg2YhAZ85937kZJnVXsRGYutFdZkw");
             HttpEntity<Void> entity = new HttpEntity<>(headers);
             UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl(MessageFormat.format("https://pw2021-carly-backend.azurewebsites.net/V1/cars/{0}",id));
 
