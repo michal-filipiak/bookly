@@ -10,8 +10,10 @@ import {
 } from "react-native";
 import { Button } from "react-native-elements";
 import ParkingFilter from "./parkingFilterView";
+import validateDate from "../utils/validateDate";
+import { showMessage } from "react-native-flash-message";
 
-export default function Parkly({ navigation }) {
+export default function Parkly({ navigation, route }) {
   const [dataSource, setDataSource] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
@@ -20,8 +22,14 @@ export default function Parkly({ navigation }) {
   const [startDate,setStartDate] = useState(new Date().toISOString().substring(0,19));
   const [endDate, setEndDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+7).toISOString().substring(0,19));
 
-  console.log(startDate);
-  console.log(endDate);
+  //console.log(startDate);
+  //console.log(endDate);
+
+  const setFilters = (newStartDate) => {
+    setStartDate(new Date(newStartDate).toISOString().substring(0,19));
+    //setEndDate();
+    console.log(startDate);
+  }
 
   useEffect(() => {
     getParkly();
@@ -29,10 +37,10 @@ export default function Parkly({ navigation }) {
 
   async function getParkly() {
     await fetch(
-      "http://localhost:8080/slots?startDate=2022-12-20T11:11:11&endDate=2022-12-29T11:11:11",
+      "https://bookly.azurewebsites.net/slots",
       {
         headers: {
-          Authorization: "0762bf06-a086-4a17-a84d-1971d7eb691f",
+          Authorization: route.params.token,
         },
       }
     )
@@ -55,7 +63,11 @@ export default function Parkly({ navigation }) {
     </View>
   ) : (
     <SafeAreaView style={styles.container}>
-      <ParkingFilter/>
+      <ParkingFilter 
+        startDate={startDate} 
+        endDate={endDate}
+        setFilters={setFilters}
+        />
       <FlatList
         data={dataSource}
         renderItem={({ item }) => (
