@@ -12,13 +12,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Flat
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private String name;

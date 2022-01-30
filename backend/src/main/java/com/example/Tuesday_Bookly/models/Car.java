@@ -9,13 +9,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Car
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long carId;
 
     private String carName;
