@@ -16,14 +16,12 @@ export default function LoginScreen({navigation, route }) {
         password: password
       })
     };
-    console.log(requestOptions);
     const token = await fetch('https://bookly.azurewebsites.net/users/login',requestOptions).then(response => response.text());
     if(!token.includes("error")) {
       showMessage({
           message: "Succesfully logged in",
           type: "success",
       });
-      console.log(token);
       route.params.setToken(token);
       navigation.navigate('Logged');
     } else {

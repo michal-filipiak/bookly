@@ -1,30 +1,89 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { Button } from "react-native-elements/dist/buttons/Button";
+import validateDate from "../utils/validateDate";
+import { showMessage } from "react-native-flash-message";
 
 export default function CarFilter(props) {
+  const [dateFrom, setDateFrom] = useState(props.startDate);
+  const [dateTo, setDateTo] = useState(props.endDate);
+  const [location, setLocation] = useState(props.location);
+  const [carModel, setModel] = useState(props.carModel);
+  const [carName, setCarName] = useState(props.carName);
+
+  function validateChangedData() {
+    const isValid = validateDate(dateFrom) && validateDate(dateTo);
+
+    if (!isValid) {
+      showMessage({
+        message: "Invalid date format or dates are not entered! (YYYY-MM-DD)",
+        type: "warning",
+      });
+    }
+    return isValid;
+  }
 
   return (
     <View style={[styles.filterContainer, styles.shadowProp]}>
       <View style={{ flexDirection: "row" }}>
-        <TextInput placeholder="Car Name" style={styles.leftInput} />
-        <TextInput placeholder="Car Model" style={styles.rightInput} />
+        <TextInput
+          placeholder="From: YYYY-MM-DD"
+          value={dateFrom}
+          style={styles.leftInput}
+          onChangeText={setDateFrom}
+        />
+        <TextInput
+          placeholder="To: YYYY-MM-DD"
+          value={dateTo}
+          style={styles.rightInput}
+          onChangeText={setDateTo}
+        />
       </View>
       <View style={{ flexDirection: "row" }}>
-        <TextInput placeholder="From: YYYY-MM-DD" style={styles.leftInput} />
-        <TextInput placeholder="To: YYYY-MM-DD" style={styles.rightInput} />
+        <TextInput
+          placeholder="Car Name"
+          style={styles.leftInput}
+          onChangeText={setCarName}
+          value={carName}
+        />
+        <TextInput
+          placeholder="Car Model"
+          style={styles.rightInput}
+          onChangeText={setModel}
+          value={carModel}
+        />
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        <TextInput
+          placeholder="Location"
+          style={styles.leftInput}
+          onChangeText={setLocation}
+          value={location}
+        />
       </View>
       <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
         <Button
           title="Reset Filters"
           buttonStyle={styles.setFilterButtonStyle}
           containerStyle={styles.buttonContainer}
-          onPress={() => console.log("refetch data")}
+          onPress={() => props.onResetFilters()}
         />
         <Button
           title="Set Filters"
           buttonStyle={styles.setFilterButtonStyle}
           containerStyle={styles.buttonContainer}
+          onPress={() => {
+            if (validateChangedData()) {
+              const data = {
+                startDate: dateFrom,
+                endDate: dateTo,
+                location: location,
+                carModel: carModel,
+                carName: carName,
+              };
+              props.onSetFilters(data);
+            }
+          }}
         />
       </View>
     </View>

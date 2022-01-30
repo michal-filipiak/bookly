@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import ImageSlider from "react-native-image-slider";
 import { Button } from "react-native-elements/dist/buttons/Button";
@@ -6,11 +6,14 @@ import { showMessage } from "react-native-flash-message";
 
 export default function ParkingDetails({ route, navigation }) {
   const images = {
-    images: [
-      require("../../assets/favicon.png"),
-      require("../../assets/favicon.png"),
-    ],
+    images: [],
   };
+
+  useEffect(() => {
+    route.params.photos.map((photo) => {
+      images.images.push(photo.path)
+    })
+  }, []);
 
   return (
     <View style={styles.container}>

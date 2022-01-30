@@ -1,36 +1,56 @@
 import React, { useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { Button } from "react-native-elements/dist/buttons/Button";
+import validateDate from "../utils/validateDate";
+import { showMessage } from "react-native-flash-message";
 
 export default function ParkingFilter(props) {
-  const [dateFrom, setDateFrom] = useState(props.startDate.substring(0,10));
+  const [dateFrom, setDateFrom] = useState(props.startDate);
+  const [dateTo, setDateTo] = useState(props.endDate);
+  const [location, setLocation] = useState(props.location);
 
-  const handleSetFilters = () => {
-    props.setFilters(dateFrom);
+  function validateChangedData() {
+    const isValid = validateDate(dateFrom) && validateDate(dateTo);
+
+    if (!isValid) {
+      showMessage({
+        message: "Invalid date format or dates are not entered! (YYYY-MM-DD)",
+        type: "warning",
+      });
+    }
+    return isValid;
   }
 
   return (
     <View style={[styles.filterContainer, styles.shadowProp]}>
       <View style={{ flexDirection: "row" }}>
-        <TextInput placeholder="Parking Name" style={styles.leftInput} />
-        <TextInput placeholder="Number Of Places" style={styles.rightInput} />
+        <TextInput placeholder="From: YYYY-MM-DD" style={styles.leftInput} value={dateFrom} onChangeText={setDateFrom}/>
+        <TextInput placeholder="To: YYYY-MM-DD" style={styles.rightInput} value={dateTo} onChangeText={setDateTo}/>
       </View>
       <View style={{ flexDirection: "row" }}>
-        <TextInput placeholder="From: YYYY-MM-DD" style={styles.leftInput} value={dateFrom} onChangeText={setDateFrom}/>
-        <TextInput placeholder="To: YYYY-MM-DD" style={styles.rightInput} defaultValue={props.endDate.substring(0,10)}/>
+        <TextInput placeholder="Location" style={styles.leftInput} value={location} onChangeText={setLocation}/>
       </View>
       <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
         <Button
           title="Reset Filters"
           buttonStyle={styles.setFilterButtonStyle}
           containerStyle={styles.buttonContainer}
-          onPress={() => console.log("refetch data")}
+          onPress={() => props.onResetFilters()}
         />
         <Button
           title="Set Filters"
           buttonStyle={styles.setFilterButtonStyle}
           containerStyle={styles.buttonContainer}
-          onPress={handleSetFilters}
+          onPress={() => {
+            if (validateChangedData()) {
+              const data = {
+                startDate: dateFrom,
+                endDate: dateTo,
+                location: location,
+              };
+              props.onSetFilters(data);
+            }
+          }}
         />
       </View>
     </View>

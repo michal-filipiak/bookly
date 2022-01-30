@@ -10,30 +10,73 @@ import {
 } from "react-native";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import CarFilter from "./carFilterView";
+import getQueryString from "../utils/getQueryString";
 
-export default function Carly({ navigation }) {
+const CARS_URL = "https://bookly.azurewebsites.net/cars";
+const START_DATE = new Date().toISOString().substring(0, 10);
+const END_DATE = new Date(
+  new Date().getFullYear(),
+  new Date().getMonth(),
+  new Date().getDate() + 7
+)
+  .toISOString()
+  .substring(0, 10);
+
+export default function Carly({ navigation, route }) {
   const icon = require("../../assets/favicon.png");
+  const [startDate, setStartDate] = useState(START_DATE);
+  const [endDate, setEndDate] = useState(END_DATE);
+  const [carModel, setCarModel] = useState("");
+  const [carName, setCarName] = useState("");
+  const [location, setLocation] = useState("");
+
   const [isLoading, setLoading] = useState(true);
-  const [dataSource,setDataSource] = useState(null);
+  const [paginationCount, setCount] = useState(0);
+  const [dataSource, setDataSource] = useState(null);
+  const [filters, setFilters] = useState({
+    startDate: startDate,
+    endDate: endDate,
+    location: "",
+    carModel: "",
+    carName: "",
+  });
 
-  //const [startDate,setStartDate] = useState(new Date().toISOString().substring(0,10));
-  const [startDate,setStartDate] = useState(new Date().toISOString());
-  const [endDate, setEndDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+7).toISOString());
-
-  const CARS_URL = "http://localhost:8081/cars?startDate=2022-12-30T11:11:11&endDate=2022-12-31T11:11:11";
-  
   useEffect(() => {
-    getBookings();
-  }, []);
-  async function getBookings() {
-    await fetch(
-      CARS_URL,
-      {
-        headers: {
-          Authorization: "123",
-        },
-      }
-    )
+    getCars(filters);
+    setStartDate(filters.startDate);
+    setEndDate(filters.endDate);
+    setCarName(filters.carName);
+    setCarModel(filters.carModel);
+    setLocation(filters.location);
+  }, [filters]);
+
+  //   useEffect(() => {
+  //     getCars(filters);
+  //   }, [paginationCount]);
+
+  // function fetchMoreData() {
+  //   setCount(paginationCount+1);
+  // }
+
+  async function getCars(filters) {
+    setLoading(true);
+    const extraStringToDate = "T00:00:00";
+
+    const parameters = {
+      pageNum: 0,
+      maxNum: 50,
+      startDate: filters.startDate.concat(extraStringToDate),
+      endDate: filters.endDate.concat(extraStringToDate),
+      location: filters.location,
+      carModel: filters.carModel,
+      carName: filters.carName,
+    };
+
+    await fetch(`${CARS_URL}?${getQueryString(parameters)}`, {
+      headers: {
+        Authorization: route.params.token,
+      },
+    })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -44,11 +87,8 @@ export default function Carly({ navigation }) {
       .then((data) => {
         setDataSource(data);
         setLoading(false);
-        console.log(data);
       });
   }
-
-
 
   return isLoading ? (
     <View style={styles.loadingView}>
@@ -56,24 +96,43 @@ export default function Carly({ navigation }) {
     </View>
   ) : (
     <SafeAreaView style={styles.container}>
-      <CarFilter />
+      <CarFilter
+        startDate={startDate}
+        endDate={endDate}
+        carModel={carModel}
+        carName={carName}
+        location={location}
+        onSetFilters={(filters) => {
+          setFilters(filters);
+        }}
+        onResetFilters={() =>
+          setFilters({
+            startDate: START_DATE,
+            endDate: END_DATE,
+            location: "",
+            carName: "",
+            carModel: "",
+          })
+        }
+      />
       <FlatList
         data={dataSource}
+        onEndReached={() => console.log("activated")}
+        onEndReachedThreshold={0.5}
         renderItem={({ item }) => (
           <View style={[styles.listElement, styles.shadowProp]}>
             <View style={styles.imageContainer}>
               <Image style={styles.tinyLogo} source={icon} />
             </View>
             <View style={styles.contentContainer}>
-              <Text>
-                {item.carName} {item.carModel}
-              </Text>
-              <Text>{item.location}</Text>
-              <Text>{item.price} PLN</Text>
+              <Text>Car Name: {item.carName}</Text>
+              <Text>Car Model: {item.carModel}</Text>
+              <Text>Location: {item.location}</Text>
+              <Text>Price: {item.price} PLN</Text>
 
               <Button
                 title="Details"
-                onPress={() => navigation.navigate("CarDetails", item)}
+                onPress={() => navigation.navigate("CarDetails", {item: item,startDate: startDate, endDate: endDate})}
                 buttonStyle={styles.buttonStyle}
                 containerStyle={styles.buttonContainer}
               />
