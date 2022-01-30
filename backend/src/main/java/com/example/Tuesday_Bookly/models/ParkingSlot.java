@@ -7,13 +7,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ParkingSlot
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private String name;
@@ -33,6 +30,8 @@ public class ParkingSlot
     private LocationRest location;
 
     private double cost;
+
+    private List<Image> photos;
 
 //    @OneToMany(mappedBy="parkingSlot", fetch=FetchType.LAZY)
 //    private List<Image> images;

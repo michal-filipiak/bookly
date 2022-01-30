@@ -1,12 +1,12 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - bookly-backend
+name: Build and deploy JAR app to Azure Web App - bookly
 
 on:
   push:
     branches:
-      - master
+      - DEPLOY
   workflow_dispatch:
 
 jobs:
@@ -38,7 +38,6 @@ jobs:
     defaults:
       run:
         working-directory: backend
-        
     needs: build
     environment:
       name: 'Production'
@@ -54,7 +53,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'bookly-backend'
+          app-name: 'bookly'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_183F9503C13A4C3799B5FCCF95365B3F }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C1853AA842C3440DBE3C008DBAEB1844 }}
           package: '*.jar'

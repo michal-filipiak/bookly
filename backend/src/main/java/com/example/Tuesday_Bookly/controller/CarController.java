@@ -38,26 +38,32 @@ public class CarController
     public ResponseEntity<List<Car>> getCars(@RequestHeader HttpHeaders httpHeaders,
                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> startDate,
                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)Optional<LocalDateTime> endDate,
-                                             @RequestParam Optional<String> location, @RequestParam Optional<Integer> maxNum)
+                                             @RequestParam Optional<String> location, @RequestParam Optional<Integer> maxNum, @RequestParam Optional<String> carModel,
+                                             @RequestParam Optional<String> carName)
     {
         if(securityService.Authenticate(httpHeaders))
         {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDM1NTczMjYsImlhdCI6MTY0MzQ3MDkyNn0.YPjsaecbpFkuyDt5pAyeKe3gLcmX_1y9jM08qLQ3XmeHNjHC6WcTA9gIT-KikQRNUteVBAqDe3MEFWf9L2aFYw");
+            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDM2NDcyNDcsImlhdCI6MTY0MzU2MDg0N30.dVX5tyVtmigVBTYfaYUKW3R3I6TS9_LusQOdAUvGexIM-b5jVD_YlmfdaMg2YhAZ85937kZJnVXsRGYutFdZkw");
             HttpEntity<Void> entity = new HttpEntity<>(headers);
             UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl("https://pw2021-carly-backend.azurewebsites.net/V1/cars");
 
             if(startDate.isPresent())
-                url.queryParam("startDate", startDate);
+                url.queryParam("startDate", startDate.get());
             if(endDate.isPresent())
-                url.queryParam("endDate", endDate);
+                url.queryParam("endDate", endDate.get());
             if(location.isPresent())
-                url.queryParam("location", location);
-            if(location.isPresent())
-                url.queryParam("maxNum", maxNum);
+                url.queryParam("location", location.get());
+            if(maxNum.isPresent())
+                url.queryParam("maxNum", maxNum.get());
+            if(carModel.isPresent())
+                url.queryParam("carModel", carModel.get());
+            if(carName.isPresent())
+                url.queryParam("carName", carName.get());
 
             ResponseEntity<List<Car>> response = restTemplate.exchange(url.encode().toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<List<Car>>() {});
+
             return response;
         }
 
@@ -71,7 +77,7 @@ public class CarController
         {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDM1NTczMjYsImlhdCI6MTY0MzQ3MDkyNn0.YPjsaecbpFkuyDt5pAyeKe3gLcmX_1y9jM08qLQ3XmeHNjHC6WcTA9gIT-KikQRNUteVBAqDe3MEFWf9L2aFYw");
+            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDM2NDcyNDcsImlhdCI6MTY0MzU2MDg0N30.dVX5tyVtmigVBTYfaYUKW3R3I6TS9_LusQOdAUvGexIM-b5jVD_YlmfdaMg2YhAZ85937kZJnVXsRGYutFdZkw");
             HttpEntity<Void> entity = new HttpEntity<>(headers);
             UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl(MessageFormat.format("https://pw2021-carly-backend.azurewebsites.net/V1/cars/{0}",id));
 
