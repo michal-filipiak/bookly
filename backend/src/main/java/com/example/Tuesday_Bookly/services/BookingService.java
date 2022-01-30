@@ -175,23 +175,32 @@ public class BookingService implements BookingClient{
     }
 
     @Override
-    public List<BookingDTO> getBookings(Optional<String> filter)
+    public List<BookingDTO> getBookings(Optional<String> typeFilter, Optional<String> loginFilter)
     {
         List<BookingDTO> bookings;
-        if (filter.isPresent())
+        if (typeFilter.isPresent() && loginFilter.isEmpty())
         {
-            log.info("Fetching filtered bookings");
-            String filterString = filter.get().toLowerCase();
-            if (filterString.equals("active"))
-                bookings = bookingRepository.findByActive(true);
-            else if (filterString.equals("inactive"))
-                bookings = bookingRepository.findByActive(false);
-            else
-            {
-                log.info("Incorrect filter");
-                throw new BookingValidationException("Incorrect filter");
+            ItemTypeEnum.ItemType type;
+            if(typeFilter.equals("Car")){
+                type = ItemTypeEnum.ItemType.Car;
             }
+            else if(typeFilter.equals("Flat")){
+                type = ItemTypeEnum.ItemType.Flat;
+            }
+            else{
+                type = ItemTypeEnum.ItemType.ParkingSlot;
+            }
+            log.info("Fetching filtered bookings");
+            bookings = bookingRepository.findByitemType(type);
         }
+        else if(typeFilter.isEmpty() && loginFilter.isPresent()) {
+            log.info("Fetching bookings filtered by login");
+            bookings = bookingRepository.findByowner_login(loginFilter.get());
+        }
+        //TODO: niedokonczony filterbylogin :)
+ //       else if(typeFilter.isPresent() && loginFilter.isPresent()){
+//
+  //      }
         else
         {
             log.info("Fetching all bookings");
