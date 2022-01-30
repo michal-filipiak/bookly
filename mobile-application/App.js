@@ -18,19 +18,19 @@ import Booked from "./components/booked/booked";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function menuTabs() {
-  return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="Parkly" component={Parkly} />
-      <Tab.Screen name="Flatly" component={Flatly} />
-      <Tab.Screen name="Carly" component={Carly} />
-      <Tab.Screen name="Booked" component={Booked} />
-    </Tab.Navigator>
-  );
-}
-
 export default function App() {
-  const [token, setToken] = React.useState(true);
+  const [token, setToken] = React.useState("");
+
+  function menuTabs() {
+    return (
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
+        <Tab.Screen name="Parkly" component={Parkly} initialParams={{ token: token }}/>
+        <Tab.Screen name="Flatly" component={Flatly} initialParams={{ token: token }}/>
+        <Tab.Screen name="Carly" component={Carly} initialParams={{ token: token }}/>
+        <Tab.Screen name="Booked" component={Booked} initialParams={{ token: token }}/>
+      </Tab.Navigator>
+    );
+  }
 
   return (
     <NavigationContainer>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -67,8 +68,21 @@ public class UserController
         return ResponseEntity.ok(user);
     }
 
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<String> deleteUser(@RequestHeader HttpHeaders headers, @PathVariable("id") long id)
+    {
+        if(securityService.Authenticate(headers)){
+            return userClient.deleteUser(id)
+                    ? ResponseEntity.ok("User deleted")
+                    : ResponseEntity.badRequest().body(String.format("User with id %s does not exist.", id));
+        }
+        else{
+            return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     @GetMapping(path = "")
-    public ResponseEntity<List<User>> getUsers(@RequestHeader HttpHeaders headers, @RequestParam String login){
+    public ResponseEntity<List<User>> getUsers(@RequestHeader HttpHeaders headers, @RequestParam Optional<String> login){
         if(securityService.Authenticate(headers)){
             List<User> usersList = userClient.getUsers(login);
             return ResponseEntity.ok(usersList);
@@ -77,6 +91,7 @@ public class UserController
             return new ResponseEntity<List<User>>(HttpStatus.UNAUTHORIZED);
         }
     }
+
     private void authenticate(String username, String password) throws Exception
     {
         try

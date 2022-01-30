@@ -20,10 +20,19 @@ export default function ParkingDetails({ route, navigation }) {
         </View>
         <Text style={styles.information}>Name: {route.params.name}</Text>
         <Text style={styles.information}>
-          Number Of Places: {route.params.nrOfPlaces}
+          City: {route.params.location.city}
         </Text>
         <Text style={styles.information}>
-          Location: {route.params.location}
+          Country: {route.params.location.country}
+        </Text>
+        <Text style={styles.information}>
+          Street: {route.params.location.street}
+        </Text>
+        <Text style={styles.information}>
+          Number: {route.params.location.number}
+        </Text>
+        <Text style={styles.information}>
+          Descritpion: {route.params.description}
         </Text>
         <Button
           title="Book Parking"

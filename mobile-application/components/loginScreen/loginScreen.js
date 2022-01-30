@@ -17,12 +17,13 @@ export default function LoginScreen({navigation, route }) {
       })
     };
     console.log(requestOptions);
-    const token = await fetch('http://localhost:8080/users/login',requestOptions).then(response => response.text());
+    const token = await fetch('https://bookly.azurewebsites.net/users/login',requestOptions).then(response => response.text());
     if(!token.includes("error")) {
       showMessage({
           message: "Succesfully logged in",
           type: "success",
       });
+      console.log(token);
       route.params.setToken(token);
       navigation.navigate('Logged');
     } else {
@@ -52,7 +53,7 @@ export default function LoginScreen({navigation, route }) {
       <View style={{flexDirection: "row"}}>
       <Button 
         title='Login' 
-        onPress={() => /*loginUser()*/navigation.navigate('Logged')}
+        onPress={() => loginUser()}
         buttonStyle={styles.loginButtonStyle}
         containerStyle={styles.buttonContainer}/>
       <Button 

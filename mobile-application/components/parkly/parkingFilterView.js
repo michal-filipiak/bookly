@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { Button } from "react-native-elements/dist/buttons/Button";
 
 export default function ParkingFilter(props) {
+  const [dateFrom, setDateFrom] = useState(props.startDate.substring(0,10));
+
+  const handleSetFilters = () => {
+    props.setFilters(dateFrom);
+  }
+
   return (
     <View style={[styles.filterContainer, styles.shadowProp]}>
       <View style={{ flexDirection: "row" }}>
@@ -10,8 +16,8 @@ export default function ParkingFilter(props) {
         <TextInput placeholder="Number Of Places" style={styles.rightInput} />
       </View>
       <View style={{ flexDirection: "row" }}>
-        <TextInput placeholder="From: YYYY-MM-DD" style={styles.leftInput} />
-        <TextInput placeholder="To: YYYY-MM-DD" style={styles.rightInput} />
+        <TextInput placeholder="From: YYYY-MM-DD" style={styles.leftInput} value={dateFrom} onChangeText={setDateFrom}/>
+        <TextInput placeholder="To: YYYY-MM-DD" style={styles.rightInput} defaultValue={props.endDate.substring(0,10)}/>
       </View>
       <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
         <Button
@@ -24,6 +30,7 @@ export default function ParkingFilter(props) {
           title="Set Filters"
           buttonStyle={styles.setFilterButtonStyle}
           containerStyle={styles.buttonContainer}
+          onPress={handleSetFilters}
         />
       </View>
     </View>
