@@ -5,10 +5,7 @@ import com.example.Tuesday_Bookly.dao.UserRepository;
 import com.example.Tuesday_Bookly.enums.ItemTypeEnum;
 import com.example.Tuesday_Bookly.exceptions.BookingValidationException;
 import com.example.Tuesday_Bookly.models.User;
-import com.example.Tuesday_Bookly.models.bookings.BookingDTO;
-import com.example.Tuesday_Bookly.models.bookings.BookingCrudModel;
-import com.example.Tuesday_Bookly.models.bookings.CarlyBookingModel;
-import com.example.Tuesday_Bookly.models.bookings.ParklyBookingModel;
+import com.example.Tuesday_Bookly.models.bookings.*;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +111,29 @@ public class BookingService implements BookingClient{
                 booking.setEndDateTime(model.getEndDate());
                 booking.setOwner(user);
                 booking.setExternBookingId(response.getBody().getId());
+                booking.setActive(true);
+                break;
+            }
+            case Flat:
+            {
+                headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkiLCJleHAiOjE2NDM2MjQ4NDgsImlhdCI6MTY0MzUzODQ0OH0.CzcUyaGveO-gAEnabepX90C8XwQ-BKVqLc4hIUGK2UyFBOP7blrIhNkUyf_i6H8WtHLC-0KE6muk2QaNEfqZHQ");
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                JSONObject body = new JSONObject();
+                body.put("flat", model.getItemId());
+                body.put("bookedFrom", model.getStartDate().toString());
+                body.put("bookedTo", model.getEndDate().toString());
+
+                HttpEntity<String> entity = new HttpEntity<>(body.toString(), headers);
+                String url = UriComponentsBuilder
+                        .fromHttpUrl("https://pw-flatly.herokuapp.com/api/bookings")
+                        .toUriString();
+
+                ResponseEntity<FlatlyBookingModel> response = restTemplate.exchange(url, HttpMethod.POST, entity, FlatlyBookingModel.class);
+                booking.setItemType(ItemTypeEnum.ItemType.Flat);
+                booking.setStartDateTime(model.getStartDate());
+                booking.setEndDateTime(model.getEndDate());
+                booking.setOwner(user);
+                booking.setExternBookingId(response.getBody().getFlat());
                 booking.setActive(true);
                 break;
             }
