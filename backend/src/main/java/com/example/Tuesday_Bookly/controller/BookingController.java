@@ -1,5 +1,6 @@
 package com.example.Tuesday_Bookly.controller;
 
+import com.example.Tuesday_Bookly.enums.ItemTypeEnum;
 import com.example.Tuesday_Bookly.models.bookings.BookingDTO;
 import com.example.Tuesday_Bookly.models.bookings.BookingCrudModel;
 import com.example.Tuesday_Bookly.security.services.SecurityService;
@@ -41,10 +42,11 @@ public class BookingController
     }
 
     @GetMapping(path = "")
-    public ResponseEntity<List<BookingDTO>> getBookings(@RequestHeader HttpHeaders headers, @RequestParam Optional<String> filter) //for now: filter == active || inactive
+    public ResponseEntity<List<BookingDTO>> getBookings(@RequestHeader HttpHeaders headers,
+                                                        @RequestParam Optional<String> typeFilter, @RequestParam Optional<String> loginFilter)
     {
         if(securityService.Authenticate(headers)){
-            List<BookingDTO> bookings = bookingClient.getBookings(filter);
+            List<BookingDTO> bookings = bookingClient.getBookings(typeFilter, loginFilter);
             return ResponseEntity.ok(bookings);
         }
         else{

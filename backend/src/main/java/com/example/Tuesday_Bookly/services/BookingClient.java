@@ -1,4 +1,5 @@
 package com.example.Tuesday_Bookly.services;
+import com.example.Tuesday_Bookly.enums.ItemTypeEnum;
 import com.example.Tuesday_Bookly.models.bookings.BookingDTO;
 import com.example.Tuesday_Bookly.models.bookings.BookingCrudModel;
 
@@ -13,6 +14,6 @@ public interface BookingClient
 
 
 
-    List<BookingDTO> getBookings(Optional<String> filter);
+    List<BookingDTO> getBookings(Optional<String> typeFilter, Optional<String> loginFilter);
     Optional<BookingDTO> getBooking(long id);
 }
