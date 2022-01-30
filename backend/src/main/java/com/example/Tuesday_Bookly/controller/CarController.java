@@ -12,8 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +45,7 @@ public class CarController
                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> startDate,
                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)Optional<LocalDateTime> endDate,
                                              @RequestParam Optional<String> location, @RequestParam Optional<Integer> maxNum, @RequestParam Optional<String> carModel,
-                                             @RequestParam Optional<String> carName)
+                                             @RequestParam Optional<String> carName) throws IOException
     {
         if(securityService.Authenticate(httpHeaders))
         {
@@ -63,6 +69,20 @@ public class CarController
                 url.queryParam("carName", carName.get());
 
             ResponseEntity<List<Car>> response = restTemplate.exchange(url.encode().toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<List<Car>>() {});
+
+            for(Car car : response.getBody())
+            {
+                List<String> images = car.getImages();
+                List<BufferedImage> parsedImages = new ArrayList<>();
+                for(int i =0; i < car.getImages().size(); i++)
+                {
+                    ResponseEntity<byte[]> bytes = restTemplate.exchange("https://pw2021-carly-backend.azurewebsites.net/V1/images/" + images.get(i), HttpMethod.GET, entity, byte[].class);
+                    ByteArrayInputStream stream = new ByteArrayInputStream(bytes.getBody());
+                    BufferedImage image = ImageIO.read(stream);
+                    parsedImages.add(image);
+                }
+                car.setParsedImage(parsedImages);
+            }
 
             return response;
         }

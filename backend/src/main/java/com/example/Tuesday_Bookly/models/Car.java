@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Data;
 import javax.persistence.*;
+import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +32,8 @@ public class Car
 
     private String description;
 
-//    @OneToMany(mappedBy="car", fetch=FetchType.LAZY)
-//    private List<Image> images;
+    private List<String> images;
+
+    private List<BufferedImage> parsedImage;
 
 }
