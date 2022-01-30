@@ -1,0 +1,40 @@
+[
+    {
+      "carId": 1,
+      "carName": "Bens",
+      "carModel": "Meidam",
+      "price": 200.00,
+      "location": "London",
+      "description": "ari condtional",
+      "images": [
+          "756b45b2-8a41-495a-a6a7-cf6ec598716b",
+          "756b45b2-8a41-495a-a6a7-cf6ec598716b",
+          "756b45b2-8a41-495a-a6a7-cf6ec598716b"
+      ],
+      "startDateTime": "2022-01-01T12:13:15",
+      "endDateTime": "2023-01-01T12:13:15",
+      "createTime": null,
+      "updateTime": null,
+      "orders": [],
+      "active": true
+  },
+  {
+    "carId": 2,
+    "carName": "Mercedes",
+    "carModel": "Sheridan",
+    "price": 3200.00,
+    "location": "Washington",
+    "description": "Interesting",
+    "images": [
+        "756b45b2-8a41-495a-a6a7-cf6ec598716b",
+        "756b45b2-8a41-495a-a6a7-cf6ec598716b",
+        "756b45b2-8a41-495a-a6a7-cf6ec598716b"
+    ],
+    "startDateTime": "2022-01-01T12:13:15",
+    "endDateTime": "2023-01-01T12:13:15",
+    "createTime": null,
+    "updateTime": null,
+    "orders": [],
+    "active": false
+   }
+]

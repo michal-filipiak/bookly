@@ -1,0 +1,13 @@
+package com.example.Tuesday_Bookly.dao;
+
+import java.util.List;
+
+import com.example.Tuesday_Bookly.models.bookings.BookingDTO;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface BookingRepository extends JpaRepository<BookingDTO, Long>
+{
+    List<BookingDTO> findByActive(boolean active);
+}
