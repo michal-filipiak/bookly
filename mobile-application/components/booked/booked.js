@@ -16,46 +16,52 @@ export default function Booked({ navigation }) {
 
   const icon = require("../../assets/favicon.png");
   const BOOKED = {
-    NAMES: [
-      "Car1",
-      "Parking1",
-      "Flat1",
-    ],
-    IS_ACTUAL: [true,false,true],
+    NAMES: ["Car1", "Parking1", "Flat1"],
+    IS_ACTUAL: [true, false, true],
     STAR_DATE_TIME: ["now", "later", "later"],
   };
 
-  useEffect(() => {
-    const items = Array.from(
-      { length: BOOKED.NAMES.length },
-      (_, index) => {
-        return {
-          name: BOOKED.NAMES[index],
-          isActual: BOOKED.IS_ACTUAL[index],
-          startDateTime: BOOKED.STAR_DATE_TIME[index],
-        };
-      }
-    );
-    setDataSource(items);
-  }, []);
-
-
   // useEffect(() => {
-  //   getBookings();
+  //   const items = Array.from(
+  //     { length: BOOKED.NAMES.length },
+  //     (_, index) => {
+  //       return {
+  //         name: BOOKED.NAMES[index],
+  //         isActual: BOOKED.IS_ACTUAL[index],
+  //         startDateTime: BOOKED.STAR_DATE_TIME[index],
+  //       };
+  //     }
+  //   );
+  //   setDataSource(items);
   // }, []);
-  // async function getBookings() {
-  //   await fetch("http://localhost:8081/bookings")
-  //     .then((response) => {
-  //       if (response.ok) {
-  //         return response.json();
-  //       } else {
-  //         response;
-  //       }
-  //     })
-  //     .then((data) => {
-  //       console.log(data);
-  //     });
-  // }
+
+  const CARS_URL = "http://localhost:8081/cars?startDate=2022-12-30T11:11:11&endDate=2022-12-31T11:11:11";
+  const PARKS_URL = "http://localhost:8081/slots?startDate=2022-12-20T11:11:11&endDate=2022-12-29T11:11:11";
+  const FLAT_URL = "http://localhost:8081/flats";
+
+  useEffect(() => {
+    getBookings();
+  }, []);
+  async function getBookings() {
+    await fetch(
+      CARS_URL,
+      {
+        headers: {
+          Authorization: "123",
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          response;
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      });
+  }
 
   return isLoading ? (
     <View style={styles.loadingView}>

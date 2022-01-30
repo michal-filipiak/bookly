@@ -3,7 +3,8 @@ import { View, TextInput, StyleSheet } from "react-native";
 import { Button } from "react-native-elements/dist/buttons/Button";
 
 export default function CarFilter(props) {
-  return props.isShown ? (
+
+  return (
     <View style={[styles.filterContainer, styles.shadowProp]}>
       <View style={{ flexDirection: "row" }}>
         <TextInput placeholder="Car Name" style={styles.leftInput} />
@@ -27,8 +28,6 @@ export default function CarFilter(props) {
         />
       </View>
     </View>
-  ) : (
-    <></>
   );
 }
 

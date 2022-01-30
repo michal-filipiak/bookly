@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,14 +8,47 @@ import {
   SafeAreaView,
   ActivityIndicator,
 } from "react-native";
-import data from "./cars.json";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import CarFilter from "./carFilterView";
 
 export default function Carly({ navigation }) {
   const icon = require("../../assets/favicon.png");
-  const [isShown, setShown] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
+  const [dataSource,setDataSource] = useState(null);
+
+  //const [startDate,setStartDate] = useState(new Date().toISOString().substring(0,10));
+  const [startDate,setStartDate] = useState(new Date().toISOString());
+  const [endDate, setEndDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+7).toISOString());
+
+  const CARS_URL = "http://localhost:8081/cars?startDate=2022-12-30T11:11:11&endDate=2022-12-31T11:11:11";
+  
+  useEffect(() => {
+    getBookings();
+  }, []);
+  async function getBookings() {
+    await fetch(
+      CARS_URL,
+      {
+        headers: {
+          Authorization: "123",
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          response;
+        }
+      })
+      .then((data) => {
+        setDataSource(data);
+        setLoading(false);
+        console.log(data);
+      });
+  }
+
+
 
   return isLoading ? (
     <View style={styles.loadingView}>
@@ -23,17 +56,9 @@ export default function Carly({ navigation }) {
     </View>
   ) : (
     <SafeAreaView style={styles.container}>
-      <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-        <Button
-          title="Filters"
-          buttonStyle={styles.buttonStyle}
-          containerStyle={styles.filterButton}
-          onPress={() => setShown(!isShown)}
-        />
-      </View>
-      <CarFilter isShown={isShown} />
+      <CarFilter />
       <FlatList
-        data={data}
+        data={dataSource}
         renderItem={({ item }) => (
           <View style={[styles.listElement, styles.shadowProp]}>
             <View style={styles.imageContainer}>

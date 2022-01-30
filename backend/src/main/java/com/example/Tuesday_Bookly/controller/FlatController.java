@@ -63,4 +63,20 @@ public class FlatController
 
         return new ResponseEntity<List<Flat>>(HttpStatus.UNAUTHORIZED);
     }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Flat> getFlat(@RequestHeader HttpHeaders httpHeaders, @PathVariable("id") long id){
+        if(securityService.Authenticate(httpHeaders)){
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkiLCJleHAiOjE2NDM2MjQ4NDgsImlhdCI6MTY0MzUzODQ0OH0.CzcUyaGveO-gAEnabepX90C8XwQ-BKVqLc4hIUGK2UyFBOP7blrIhNkUyf_i6H8WtHLC-0KE6muk2QaNEfqZHQ");
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+            String stringURL = "https://pw-flatly.herokuapp.com/api/flats/" + id;
+            UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl(stringURL);
+
+            ResponseEntity<Flat> response = restTemplate.exchange(url.toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<Flat>() {});
+            return response;
+        }
+        return new ResponseEntity<Flat>(HttpStatus.UNAUTHORIZED);
+    }
 }

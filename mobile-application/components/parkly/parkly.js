@@ -10,30 +10,44 @@ import {
 } from "react-native";
 import { Button } from "react-native-elements";
 import ParkingFilter from "./parkingFilterView";
+
 export default function Parkly({ navigation }) {
   const [dataSource, setDataSource] = useState([]);
-  const [isFilterShown, setFiltersShown] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
 
   const icon = require("../../assets/favicon.png");
-  const PARKINGS = {
-    NAMES: ["Parking1", "Parking2", "Parking3"],
-    NR_OF_PLACES: [3, 2, 1],
-    LOCATION: ["Lyon", "Paris", "Bordeaux"],
-  };
+
+  const [startDate,setStartDate] = useState(new Date().toISOString().substring(0,19));
+  const [endDate, setEndDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+7).toISOString().substring(0,19));
+
+  console.log(startDate);
+  console.log(endDate);
 
   useEffect(() => {
-    const items = Array.from({ length: PARKINGS.NAMES.length }, (_, index) => {
-      return {
-        id: 1,
-        name: PARKINGS.NAMES[index],
-        nrOfPlaces: PARKINGS.NR_OF_PLACES[index],
-        photos: icon,
-        location: PARKINGS.LOCATION[index],
-      };
-    });
-    setDataSource(items);
+    getParkly();
   }, []);
+
+  async function getParkly() {
+    await fetch(
+      "http://localhost:8080/slots?startDate=2022-12-20T11:11:11&endDate=2022-12-29T11:11:11",
+      {
+        headers: {
+          Authorization: "0762bf06-a086-4a17-a84d-1971d7eb691f",
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          response;
+        }
+      })
+      .then((data) => {
+        setDataSource(data);
+        setLoading(false);
+      });
+  }
 
   return isLoading ? (
     <View style={styles.loadingView}>
@@ -41,15 +55,7 @@ export default function Parkly({ navigation }) {
     </View>
   ) : (
     <SafeAreaView style={styles.container}>
-      <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-        <Button
-          title="Filters"
-          buttonStyle={styles.buttonStyle}
-          containerStyle={styles.filterButton}
-          onPress={() => setFiltersShown(!isFilterShown)}
-        />
-      </View>
-      <ParkingFilter isFilterShown={isFilterShown} />
+      <ParkingFilter/>
       <FlatList
         data={dataSource}
         renderItem={({ item }) => (
@@ -59,8 +65,9 @@ export default function Parkly({ navigation }) {
             </View>
             <View style={styles.contentContainer}>
               <Text style={styles.boldText}>{item.name}</Text>
-              <Text>Location: {item.location}</Text>
-              <Text>Number of places: {item.nrOfPlaces}</Text>
+              <Text>Location: {item.location.city}</Text>
+              <Text>Cost: {item.cost} PLN</Text>
+              <Text>Width: {item.width}</Text>
 
               <Button
                 title="Details"

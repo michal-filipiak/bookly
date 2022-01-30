@@ -7,19 +7,16 @@ import com.example.Tuesday_Bookly.exceptions.BookingValidationException;
 import com.example.Tuesday_Bookly.models.User;
 import com.example.Tuesday_Bookly.models.bookings.BookingDTO;
 import com.example.Tuesday_Bookly.models.bookings.BookingCrudModel;
-import com.example.Tuesday_Bookly.models.Car;
 import com.example.Tuesday_Bookly.models.bookings.CarlyBookingModel;
 import com.example.Tuesday_Bookly.models.bookings.ParklyBookingModel;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.text.MessageFormat;
 import java.time.ZoneOffset;
 import java.util.*;
 
@@ -91,7 +88,7 @@ public class BookingService implements BookingClient{
                 booking.setActive(true);
                 break;
             }
-            case ParkingSpot:
+            case ParkingSlot:
             {
                 long x = model.getStartDate().toEpochSecond(ZoneOffset.UTC);
 
@@ -100,8 +97,8 @@ public class BookingService implements BookingClient{
                 JSONObject body = new JSONObject();
                 body.put("firstName", user.getFirstName());
                 body.put("lastName", user.getLastName());
-                body.put("startDateTime", model.getStartDate().toEpochSecond(ZoneOffset.UTC));
-                body.put("endDateTime", model.getEndDate().toEpochSecond(ZoneOffset.UTC));
+                body.put("startDateTime", model.getStartDate());
+                body.put("endDateTime", model.getEndDate());
                 body.put("active", 1);
                 body.put("parkingSlot", model.getItemId());
                 body.put("ownerId", user.getId());
@@ -112,7 +109,7 @@ public class BookingService implements BookingClient{
                         .toUriString();
 
                 ResponseEntity<ParklyBookingModel> response = restTemplate.exchange(url, HttpMethod.POST, entity, ParklyBookingModel.class);
-                booking.setItemType(ItemTypeEnum.ItemType.ParkingSpot);
+                booking.setItemType(ItemTypeEnum.ItemType.ParkingSlot);
                 booking.setStartDateTime(model.getStartDate());
                 booking.setEndDateTime(model.getEndDate());
                 booking.setOwner(user);

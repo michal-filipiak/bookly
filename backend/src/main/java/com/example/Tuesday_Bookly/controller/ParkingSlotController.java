@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping(path = "/parkingSlots")
+@RequestMapping(path = "/slots")
 public class ParkingSlotController
 {
 
@@ -38,7 +38,7 @@ public class ParkingSlotController
     {}
 
     @GetMapping(path = "")
-    public ResponseEntity<List<ParkingSlot>> getFlats(@RequestHeader HttpHeaders httpHeaders, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> startDate,
+    public ResponseEntity<List<ParkingSlot>> getParkingSlot(@RequestHeader HttpHeaders httpHeaders, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> startDate,
                                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)Optional<LocalDateTime> endDate,
                                                       @RequestParam Optional<String> location)
     {
@@ -51,9 +51,9 @@ public class ParkingSlotController
             UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl("https://parkly-2022.azurewebsites.net/items");
 
             if(startDate.isPresent())
-                url.queryParam("startDate", startDate.get().toEpochSecond(ZoneOffset.UTC));
+                url.queryParam("startDate", startDate.get());
             if(endDate.isPresent())
-                url.queryParam("endDate", endDate.get().toEpochSecond(ZoneOffset.UTC));
+                url.queryParam("endDate", endDate.get());
             if(location.isPresent())
                 url.queryParam("location", location);
 
@@ -65,6 +65,23 @@ public class ParkingSlotController
 
         return new ResponseEntity<List<ParkingSlot>>(HttpStatus.UNAUTHORIZED);
     }
+
+    @GetMapping(path="/{id}")
+    public ResponseEntity<ParkingSlot> getParkingSlot(@RequestHeader HttpHeaders httpHeaders, @PathVariable("id") long id){
+        if(securityService.Authenticate(httpHeaders)){
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("security-header", "1f7b572f-2c48-4ce7-a010-6b86112daea3");
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+            String stringURL = "https://parkly-2022.azurewebsites.net/items/" + id;
+            UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl(stringURL);
+
+            ResponseEntity<ParkingSlot> response = restTemplate.exchange(url.toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<ParkingSlot>() {});
+            return response;
+        }
+        return  new ResponseEntity<ParkingSlot>(HttpStatus.UNAUTHORIZED);
+    }
+
 
 
 }

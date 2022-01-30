@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet } from "react-native";
 import { Button } from "react-native-elements/dist/buttons/Button";
 
 export default function ParkingFilter(props) {
-  return props.isFilterShown ? (
+  return (
     <View style={[styles.filterContainer, styles.shadowProp]}>
       <View style={{ flexDirection: "row" }}>
         <TextInput placeholder="Parking Name" style={styles.leftInput} />
@@ -27,8 +27,6 @@ export default function ParkingFilter(props) {
         />
       </View>
     </View>
-  ) : (
-    <></>
   );
 }
 

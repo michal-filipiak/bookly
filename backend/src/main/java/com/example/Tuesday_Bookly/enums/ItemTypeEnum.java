@@ -6,6 +6,6 @@ public class ItemTypeEnum
     {
         Car,
         Flat,
-        ParkingSpot
+        ParkingSlot
     }
 }
