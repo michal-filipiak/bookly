@@ -50,19 +50,20 @@ public class CarController
             UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl("https://pw2021-carly-backend.azurewebsites.net/V1/cars");
 
             if(startDate.isPresent())
-                url.queryParam("startDate", startDate);
+                url.queryParam("startDate", startDate.get());
             if(endDate.isPresent())
-                url.queryParam("endDate", endDate);
+                url.queryParam("endDate", endDate.get());
             if(location.isPresent())
-                url.queryParam("location", location);
+                url.queryParam("location", location.get());
             if(maxNum.isPresent())
-                url.queryParam("maxNum", maxNum);
+                url.queryParam("maxNum", maxNum.get());
             if(carModel.isPresent())
-                url.queryParam("carModel", carModel);
+                url.queryParam("carModel", carModel.get());
             if(carName.isPresent())
-                url.queryParam("carName", carName);
+                url.queryParam("carName", carName.get());
 
             ResponseEntity<List<Car>> response = restTemplate.exchange(url.encode().toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<List<Car>>() {});
+
             return response;
         }
 

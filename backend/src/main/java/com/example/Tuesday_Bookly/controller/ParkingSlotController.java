@@ -55,7 +55,7 @@ public class ParkingSlotController
             if(endDate.isPresent())
                 url.queryParam("endDate", endDate.get().atZone(ZoneOffset.UTC));
             if(location.isPresent())
-                url.queryParam("location", location);
+                url.queryParam("location", location.get());
 
             //get active only
             url.queryParam("filter", "active");
