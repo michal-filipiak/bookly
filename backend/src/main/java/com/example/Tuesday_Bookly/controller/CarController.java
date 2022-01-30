@@ -38,7 +38,8 @@ public class CarController
     public ResponseEntity<List<Car>> getCars(@RequestHeader HttpHeaders httpHeaders,
                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> startDate,
                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)Optional<LocalDateTime> endDate,
-                                             @RequestParam Optional<String> location, @RequestParam Optional<Integer> maxNum)
+                                             @RequestParam Optional<String> location, @RequestParam Optional<Integer> maxNum, @RequestParam Optional<String> model,
+                                             @RequestParam Optional<String> carName)
     {
         if(securityService.Authenticate(httpHeaders))
         {
@@ -54,8 +55,12 @@ public class CarController
                 url.queryParam("endDate", endDate);
             if(location.isPresent())
                 url.queryParam("location", location);
-            if(location.isPresent())
+            if(maxNum.isPresent())
                 url.queryParam("maxNum", maxNum);
+            if(model.isPresent())
+                url.queryParam("model", model);
+            if(carName.isPresent())
+                url.queryParam("model", carName);
 
             ResponseEntity<List<Car>> response = restTemplate.exchange(url.encode().toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<List<Car>>() {});
             return response;
