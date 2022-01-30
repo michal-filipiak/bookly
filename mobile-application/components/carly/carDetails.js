@@ -18,7 +18,8 @@ export default function CarDetails({route, navigation}) {
       <View style={styles.imageContainer}>
         <ImageSlider images={images.images} style={styles.imageSlider}/>
       </View>
-      <Text style={styles.information}>Name: {route.params.carName} {route.params.carModel}</Text>
+      <Text style={styles.information}>Car Name: {route.params.carName}</Text>
+      <Text style={styles.information}>Car Model: {route.params.carModel}</Text>
       <Text style={styles.information}>Location: {route.params.location}</Text>
       <Text style={styles.information}>Price: {route.params.price} PLN</Text>
       <Text style={styles.information}>Description: {route.params.description}</Text>

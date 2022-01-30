@@ -21,30 +21,55 @@ const END_DATE = new Date(
 )
   .toISOString()
   .substring(0, 10);
-  
+
 export default function Carly({ navigation, route }) {
   const icon = require("../../assets/favicon.png");
   const [startDate, setStartDate] = useState(START_DATE);
   const [endDate, setEndDate] = useState(END_DATE);
-  //const [model,setModel] = useState('');
+  const [carModel, setCarModel] = useState("");
+  const [carName, setCarName] = useState("");
+  const [location, setLocation] = useState("");
 
   const [isLoading, setLoading] = useState(false);
+  const [paginationCount, setCount] = useState(0);
   const [dataSource, setDataSource] = useState(null);
   const [filters, setFilters] = useState({
     startDate: startDate,
     endDate: endDate,
+    location: "",
+    carModel: "",
+    carName: "",
   });
+
+  useEffect(() => {
+    getCars(filters);
+    setStartDate(filters.startDate);
+    setEndDate(filters.endDate);
+    setCarName(filters.carName);
+    setCarModel(filters.carModel);
+    setLocation(filters.location);
+  }, [filters]);
+
+  //   useEffect(() => {
+  //     getCars(filters);
+  //   }, [paginationCount]);
+
+  // function fetchMoreData() {
+  //   setCount(paginationCount+1);
+  // }
 
   async function getCars(filters) {
     setLoading(true);
     const extraStringToDate = "T00:00:00";
 
     const parameters = {
-      //pageNum: 0,
+      pageNum: 0,
       maxNum: 50,
       startDate: filters.startDate.concat(extraStringToDate),
       endDate: filters.endDate.concat(extraStringToDate),
       location: filters.location,
+      carModel: filters.carModel,
+      carName: filters.carName,
     };
 
     await fetch(`${CARS_URL}?${getQueryString(parameters)}`, {
@@ -62,15 +87,8 @@ export default function Carly({ navigation, route }) {
       .then((data) => {
         setDataSource(data);
         setLoading(false);
-        console.log(data);
       });
   }
-
-  useEffect(() => {
-    getCars(filters);
-    setStartDate(filters.startDate);
-    setEndDate(filters.endDate);
-  }, [filters]);
 
   return isLoading ? (
     <View style={styles.loadingView}>
@@ -81,6 +99,9 @@ export default function Carly({ navigation, route }) {
       <CarFilter
         startDate={startDate}
         endDate={endDate}
+        carModel={carModel}
+        carName={carName}
+        location={location}
         onSetFilters={(filters) => {
           setFilters(filters);
         }}
@@ -96,17 +117,18 @@ export default function Carly({ navigation, route }) {
       />
       <FlatList
         data={dataSource}
+        onEndReached={() => console.log("activated")}
+        onEndReachedThreshold={0.5}
         renderItem={({ item }) => (
           <View style={[styles.listElement, styles.shadowProp]}>
             <View style={styles.imageContainer}>
               <Image style={styles.tinyLogo} source={icon} />
             </View>
             <View style={styles.contentContainer}>
-              <Text>
-                {item.carName} {item.carModel}
-              </Text>
-              <Text>{item.location}</Text>
-              <Text>{item.price} PLN</Text>
+              <Text>Car Name: {item.carName}</Text>
+              <Text>Car Model: {item.carModel}</Text>
+              <Text>Location: {item.location}</Text>
+              <Text>Price: {item.price} PLN</Text>
 
               <Button
                 title="Details"

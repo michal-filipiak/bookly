@@ -7,6 +7,9 @@ import { showMessage } from "react-native-flash-message";
 export default function CarFilter(props) {
   const [dateFrom, setDateFrom] = useState(props.startDate);
   const [dateTo, setDateTo] = useState(props.endDate);
+  const [location, setLocation] = useState(props.location);
+  const [carModel, setModel] = useState(props.carModel);
+  const [carName, setCarName] = useState(props.carName);
 
   function validateChangedData() {
     const isValid = validateDate(dateFrom) && validateDate(dateTo);
@@ -23,10 +26,6 @@ export default function CarFilter(props) {
   return (
     <View style={[styles.filterContainer, styles.shadowProp]}>
       <View style={{ flexDirection: "row" }}>
-        <TextInput placeholder="Car Name" style={styles.leftInput} />
-        <TextInput placeholder="Car Model" style={styles.rightInput} />
-      </View>
-      <View style={{ flexDirection: "row" }}>
         <TextInput
           placeholder="From: YYYY-MM-DD"
           value={dateFrom}
@@ -38,6 +37,28 @@ export default function CarFilter(props) {
           value={dateTo}
           style={styles.rightInput}
           onChangeText={setDateTo}
+        />
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        <TextInput
+          placeholder="Car Name"
+          style={styles.leftInput}
+          onChangeText={setCarName}
+          value={carName}
+        />
+        <TextInput
+          placeholder="Car Model"
+          style={styles.rightInput}
+          onChangeText={setModel}
+          value={carModel}
+        />
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        <TextInput
+          placeholder="Location"
+          style={styles.leftInput}
+          onChangeText={setLocation}
+          value={location}
         />
       </View>
       <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
@@ -56,6 +77,9 @@ export default function CarFilter(props) {
               const data = {
                 startDate: dateFrom,
                 endDate: dateTo,
+                location: location,
+                carModel: carModel,
+                carName: carName,
               };
               props.onSetFilters(data);
             }
