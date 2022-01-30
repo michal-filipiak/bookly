@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import CarFilter from "./carFilterView";
+import getQueryString from "../utils/getQueryString";
 
 const CARS_URL = "https://bookly.azurewebsites.net/cars";
 const START_DATE = new Date().toISOString().substring(0, 10);
@@ -20,24 +21,7 @@ const END_DATE = new Date(
 )
   .toISOString()
   .substring(0, 10);
-
-const getQueryString = (params) => {
-  const queries = params;
-  for (var key in queries) {
-    if (!queries[key] && queries[key] !== 0) {
-      delete queries[key];
-    }
-  }
-  return Object.keys(queries)
-    .reduce((result, key) => {
-      return [
-        ...result,
-        `${encodeURIComponent(key)}=${encodeURIComponent(queries[key])}`,
-      ];
-    }, [])
-    .join("&");
-};
-
+  
 export default function Carly({ navigation, route }) {
   const icon = require("../../assets/favicon.png");
   const [startDate, setStartDate] = useState(START_DATE);
