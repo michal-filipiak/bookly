@@ -20,13 +20,7 @@ import static java.util.stream.Collectors.toSet;
 
 @Configuration
 @Slf4j
-public class Config {
-
-    @Value(value = "${cors.urls}")
-    private String corsUrls;
-    @Value(value = "${cors.mappings}")
-    private String corsMappings;
-
+public class Config implements  WebMvcConfigurer{
     private static final Map<String, String> envPropertiesMap = System.getenv();
 
     @PostConstruct
@@ -55,24 +49,6 @@ public class Config {
         return new UserService(userRepository);
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer()
-    {
-        getCorsUrls();
-        return new WebMvcConfigurer()
-        {
-            @Override
-            public void addCorsMappings(CorsRegistry registry)
-            {
-                final Set<String> mappings = getCorsMappings();
-                if (mappings.isEmpty())
-                    registry.addMapping("/**");
-                else
-                    for (String mapping : mappings)
-                        registry.addMapping(mapping).allowedOrigins(getCorsUrls());
-            }
-        };
-    }
 
     @Bean
     @Primary
@@ -80,19 +56,11 @@ public class Config {
         return new LocalDateFormatter();
     }
 
-
-    private String[] getCorsUrls()
-    {
-        return Optional.ofNullable(corsUrls)
-                .map(value -> value.split(","))
-                .orElseGet(() -> new String[0]);
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/*").allowedMethods("");
     }
 
-    private Set<String> getCorsMappings()
-    {
-        return Optional.ofNullable(corsMappings)
-                .map(value -> Arrays.stream(value.split(",")))
-                .map(stream -> stream.collect(toSet()))
-                .orElseGet(HashSet::new);
-    }
+
+
 }
