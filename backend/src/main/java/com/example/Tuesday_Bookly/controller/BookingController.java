@@ -45,7 +45,7 @@ public class BookingController
 
     @GetMapping(path = "")
     public ResponseEntity<List<BookingDTO>> getBookings(@RequestHeader HttpHeaders headers,
-                                                        @RequestParam Optional<String> typeFilter, @RequestParam Optional<String> loginFilter)
+                                                        @RequestParam Optional<Integer> typeFilter, @RequestParam Optional<String> loginFilter)
     {
         if(securityService.Authenticate(headers)){
             List<BookingDTO> bookings = bookingClient.getBookings(typeFilter, loginFilter);

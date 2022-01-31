@@ -174,7 +174,7 @@ public class BookingService implements BookingClient{
     }
 
     @Override
-    public List<BookingDTO> getBookings(Optional<String> typeFilter, Optional<String> loginFilter)
+    public List<BookingDTO> getBookings(Optional<Integer> typeFilter, Optional<String> loginFilter)
     {
         if(typeFilter.isPresent())
         {

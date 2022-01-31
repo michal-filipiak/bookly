@@ -23,10 +23,10 @@ public interface BookingRepository extends JpaRepository<BookingDTO, Long>
 
 
     @Query(value="SELECT bdto.* FROM BookingDTO bdto join User u on u.Id=bdto.owner_id where bdto.item_type = ?1 and u.login like ?2%", nativeQuery = true)
-    List<BookingDTO> searchByItemTypeAndLogin(String type, String login);
+    List<BookingDTO> searchByItemTypeAndLogin(Integer type, String login);
 
     @Query(value="SELECT bdto.* FROM BookingDTO bdto where bdto.item_type = ?1", nativeQuery = true)
-    List<BookingDTO> findAllByItemType(String type);
+    List<BookingDTO> findAllByItemType(Integer type);
 
     @Query(value="SELECT bdto.* FROM BookingDTO bdto join User u on u.Id=bdto.owner_id where u.login like ?1%", nativeQuery = true)
     List<BookingDTO> findAllByLogin(String login);
