@@ -184,13 +184,11 @@ public class BookingService implements BookingClient{
         order.toUpperCase(Locale.ROOT);
         if (order.equals("ASC"))
         {
-            return bookingRepository.findAllByItemTypeAndOrLogin(typeFilter, loginFilter,
-                    PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.ASC, "u.login")));
+            return bookingRepository.findAllByItemTypeAndOrLoginASC(typeFilter, loginFilter, PageRequest.of(pageNum, pageSize));
         }
         else if (order.equals("DESC"))
         {
-            return bookingRepository.findAllByItemTypeAndOrLogin(typeFilter, loginFilter,
-                    PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "u.login")));
+            return bookingRepository.findAllByItemTypeAndOrLoginDESC(typeFilter, loginFilter, PageRequest.of(pageNum, pageSize));
         }
 
 
