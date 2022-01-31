@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile-applicaton",
-    "slug": "mobile-applicaton",
+    "name": "bookly-2021",
+    "slug": "bookly-2021",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "",
+    "privacy": "public"
   }
 }

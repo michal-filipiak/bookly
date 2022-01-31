@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Button } from "react-native-elements";
+import { showMessage } from "react-native-flash-message";
 
 const BOOKED_URL_USER = "https://bookly.azurewebsites.net/bookings/user";
 const BOOKED_URL = "https://bookly.azurewebsites.net/bookings";
@@ -27,6 +28,10 @@ export default function Booked({ navigation, route }) {
 
   useEffect(() => {
     getBookings();
+    showMessage({
+      message: "Succesfully cancel booking",
+      type: "success",
+    });
   }, [isFetching]);
 
   async function getBookings() {
