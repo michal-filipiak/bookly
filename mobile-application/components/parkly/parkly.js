@@ -23,8 +23,9 @@ const END_DATE = new Date(
   .substring(0, 10);
 
 export default function Parkly({ navigation, route }) {
+  const icon = require("../../assets/favicon.png");
   const [dataSource, setDataSource] = useState([]);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState(START_DATE);
   const [endDate, setEndDate] = useState(END_DATE);
@@ -97,7 +98,7 @@ export default function Parkly({ navigation, route }) {
         renderItem={({ item }) => (
           <View style={[styles.listElement, styles.shadowProp]}>
             <View style={styles.imageContainer}>
-              <Image style={styles.tinyLogo} source={item.photos[0].path} />
+              <Image style={styles.tinyLogo} source={item.photos.length !== 0 ? item.photos[0].path : icon} />
             </View>
             <View style={styles.contentContainer}>
               <Text style={styles.boldText}>{item.name}</Text>
@@ -109,7 +110,7 @@ export default function Parkly({ navigation, route }) {
                 title="Details"
                 buttonStyle={styles.buttonStyle}
                 containerStyle={styles.buttonContainer}
-                onPress={() => navigation.navigate("ParkingDetails", item)}
+                onPress={() => navigation.navigate("ParkingDetails", {item: item, startDate: startDate, endDate: endDate})}
               />
             </View>
           </View>

@@ -10,39 +10,72 @@ import {
 } from "react-native";
 import { Button, Divider } from "react-native-elements";
 import FlatFilter from "./flatFilterView";
-export default function Flatly({ navigation }) {
-  const [dataSource, setDataSource] = useState([]);
-  const [isFilterShown, setFiltersShown] = useState(false);
-  const [isLoading, setLoading] = useState(false);
 
-  const icon = require("../../assets/favicon.png");
-  const APARTAMENTS = {
-    NAMES: [
-      "Appartement T3 dans une résidence de standing",
-      "Petit appartement à PARIS !",
-      "Petit Studio dans le Marais",
-    ],
-    SQUARE_METERS: [45, 63, 55],
-    NR_OF_ROOMS: [3, 2, 1],
-    LOCATION: ["Lyon", "Paris", "Bordeaux"],
-  };
+const FLATS_URL = "https://bookly.azurewebsites.net/flats";
+const START_DATE = new Date().toISOString().substring(0, 10);
+const END_DATE = new Date(
+  new Date().getFullYear(),
+  new Date().getMonth(),
+  new Date().getDate() + 7
+)
+  .toISOString()
+  .substring(0, 10);
+const icon = require("../../assets/favicon.png");
+
+export default function Flatly({ navigation, route }) {
+  const [dataSource, setDataSource] = useState(null);
+  const [isLoading, setLoading] = useState(true);
+
+  const [name, setName] = useState("");
+  const [maxGuests, setGuests] = useState("");
+  const [location, setLocation] = useState("");
+  const [startDate, setStartDate] = useState(START_DATE);
+  const [endDate, setEndDate] = useState(END_DATE);
+
+  const [filters, setFilters] = useState({
+    startDate: startDate,
+    endDate: endDate,
+    location: "",
+    name: "",
+    maxGuests: "",
+  });
 
   useEffect(() => {
-    const items = Array.from(
-      { length: APARTAMENTS.NAMES.length },
-      (_, index) => {
-        return {
-          id: 1,
-          name: APARTAMENTS.NAMES[index],
-          squareMeters: APARTAMENTS.SQUARE_METERS[index],
-          nrOfRooms: APARTAMENTS.NR_OF_ROOMS[index],
-          photos: icon,
-          location: APARTAMENTS.LOCATION[index],
-        };
-      }
-    );
-    setDataSource(items);
-  }, []);
+    getFlats();
+  }, [filters]);
+
+  async function getFlats() {
+    setLoading(true);
+    // const extraStringToDate = "T00:00:00";
+
+    // const parameters = {
+    //   pageNum: 0,
+    //   maxNum: 50,
+    //   startDate: filters.startDate.concat(extraStringToDate),
+    //   endDate: filters.endDate.concat(extraStringToDate),
+    //   location: filters.location,
+    //   carModel: filters.carModel,
+    //   carName: filters.carName,
+    // };
+
+    await fetch(`${FLATS_URL}`, {
+      headers: {
+        Authorization: route.params.token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          response;
+        }
+      })
+      .then((data) => {
+        setDataSource(data);
+        setLoading(false);
+        console.log(data);
+      });
+  }
 
   return isLoading ? (
     <View style={styles.loadingView}>
@@ -50,15 +83,25 @@ export default function Flatly({ navigation }) {
     </View>
   ) : (
     <SafeAreaView style={styles.container}>
-      <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-        <Button
-          title="Filters"
-          buttonStyle={styles.buttonStyle}
-          containerStyle={styles.filterButton}
-          onPress={() => setFiltersShown(!isFilterShown)}
-        />
-      </View>
-      <FlatFilter isFilterShown={isFilterShown} />
+      <FlatFilter
+        startDate={startDate}
+        endDate={endDate}
+        name={name}
+        maxGuests={maxGuests}
+        location={location}
+        onSetFilters={(filters) => {
+          setFilters(filters);
+        }}
+        onResetFilters={() =>
+          setFilters({
+            startDate: START_DATE,
+            endDate: END_DATE,
+            location: "",
+            name: "",
+            maxGuests: "",
+          })
+        }
+      />
       <FlatList
         data={dataSource}
         renderItem={({ item }) => (
@@ -67,16 +110,16 @@ export default function Flatly({ navigation }) {
               <Image style={styles.tinyLogo} source={icon} />
             </View>
             <View style={styles.contentContainer}>
-              <Text style={styles.boldText}>{item.name}</Text>
+              <Text style={styles.boldText}> Name: {item.name}</Text>
               <Text>Location: {item.location}</Text>
-              <Text>Number of rooms: {item.nrOfRooms}</Text>
-              <Text>Area: {item.squareMeters} m2</Text>
+              <Text>Max Guests: {item.maxGuests}</Text>
+              <Text>Price: {item.price} PLN</Text>
 
               <Button
                 title="Details"
                 buttonStyle={styles.buttonStyle}
                 containerStyle={styles.buttonContainer}
-                onPress={() => navigation.navigate("FlatDetails", item)}
+                onPress={() => navigation.navigate("FlatDetails", {item: item,startDate: startDate, endDate: endDate})}
               />
             </View>
           </View>

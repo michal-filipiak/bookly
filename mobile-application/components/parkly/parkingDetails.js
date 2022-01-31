@@ -4,16 +4,58 @@ import ImageSlider from "react-native-image-slider";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import { showMessage } from "react-native-flash-message";
 
+const BOOK_URL = "https://bookly.azurewebsites.net/bookings";
+
 export default function ParkingDetails({ route, navigation }) {
   const images = {
     images: [],
   };
 
   useEffect(() => {
-    route.params.photos.map((photo) => {
+    route.params.item.photos.map((photo) => {
       images.images.push(photo.path)
     })
   }, []);
+
+  async function bookSlot() {
+    const extraString= "T00:00:00";
+    const body = {
+      itemId: route.params.item.id,
+      itemType: "ParkingSlot",
+      startDate: route.params.startDate.concat(extraString),
+      endDate: route.params.endDate.concat(extraString),
+    };
+
+    await fetch(`${BOOK_URL}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: route.params.token,
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          response;
+        }
+      })
+      .then((status) => {
+        if(!status) {
+          showMessage({
+            message: "Failed booking!",
+            type: "danger",
+          });
+          return;
+        }
+        showMessage({
+          message: "Succesfully booked slot",
+          type: "success",
+        });
+        navigation.goBack();
+      });
+  }
 
   return (
     <View style={styles.container}>
@@ -21,30 +63,26 @@ export default function ParkingDetails({ route, navigation }) {
         <View style={styles.imageContainer}>
           <ImageSlider images={images.images} style={styles.imageSlider} />
         </View>
-        <Text style={styles.information}>Name: {route.params.name}</Text>
+        <Text style={styles.information}>Name: {route.params.item.name}</Text>
         <Text style={styles.information}>
-          City: {route.params.location.city}
+          City: {route.params.item.location.city}
         </Text>
         <Text style={styles.information}>
-          Country: {route.params.location.country}
+          Country: {route.params.item.location.country}
         </Text>
         <Text style={styles.information}>
-          Street: {route.params.location.street}
+          Street: {route.params.item.location.street}
         </Text>
         <Text style={styles.information}>
-          Number: {route.params.location.number}
+          Number: {route.params.item.location.number}
         </Text>
         <Text style={styles.information}>
-          Descritpion: {route.params.description}
+          Descritpion: {route.params.item.description}
         </Text>
         <Button
           title="Book Parking"
           onPress={() => {
-            showMessage({
-              message: "Succesfully booked parking",
-              type: "success",
-            });
-            navigation.goBack();
+            bookSlot();
           }}
           buttonStyle={styles.buttonStyle}
           containerStyle={styles.createAccountButton}
