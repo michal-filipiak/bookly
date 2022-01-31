@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -29,16 +30,11 @@ import java.util.Optional;
 @RequestMapping(path = "/cars")
 public class CarController
 {
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private SecurityService securityService;
-
-    @Autowired
-    public CarController()
-    {}
 
     @GetMapping(path = "")
     public ResponseEntity<List<Car>> getCars(@RequestHeader HttpHeaders httpHeaders,
@@ -69,20 +65,8 @@ public class CarController
                 url.queryParam("carName", carName.get());
 
             ResponseEntity<List<Car>> response = restTemplate.exchange(url.encode().toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<List<Car>>() {});
-
-//            for(Car car : response.getBody())
-//            {
-//                List<String> images = car.getImages();
-//                List<BufferedImage> parsedImages = new ArrayList<>();
-//                for(int i =0; i < car.getImages().size(); i++)
-//                {
-//                    ResponseEntity<byte[]> bytes = restTemplate.exchange("https://pw2021-carly-backend.azurewebsites.net/V1/images/" + images.get(i), HttpMethod.GET, entity, byte[].class);
-//                    ByteArrayInputStream stream = new ByteArrayInputStream(bytes.getBody());
-//                    BufferedImage image = ImageIO.read(stream);
-//                    parsedImages.add(image);
-//                }
-//                car.setParsedImage(parsedImages);
-//            }
+            for (Car car : response.getBody())
+                car.setImages(car.getImages().stream().map(x -> "http://pw2021-carly-backend.azurewebsites.net/V1/images/" + x).collect(Collectors.toList()));
 
             return response;
         }
@@ -102,7 +86,10 @@ public class CarController
             UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl(MessageFormat.format("https://pw2021-carly-backend.azurewebsites.net/V1/cars/{0}",id));
 
             ResponseEntity<Car> response = restTemplate.exchange(url.encode().toUriString(), HttpMethod.GET, entity, Car.class);
-            return response;
+            Car car = response.getBody();
+            car.setImages(car.getImages().stream().map(x -> "http://pw2021-carly-backend.azurewebsites.net/V1/images/" + x).collect(Collectors.toList()));
+
+            return ResponseEntity.ok(car);
         }
 
         return new ResponseEntity<Car>(HttpStatus.UNAUTHORIZED);

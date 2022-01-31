@@ -33,7 +33,4 @@ public class Car
     private String description;
 
     private List<String> images;
-
-    private List<BufferedImage> parsedImage;
-
 }

@@ -12,6 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long>
 {
     Optional<User> findByLogin(String login);
     List<User> findAllByLoginContains(String Login);
-    boolean existsBysecurityToken(String token);
-    Optional<User> findBysecurityToken(String token);
+    boolean existsBySecurityToken(String token);
+    Optional<User> findBySecurityToken(String token);
 }

@@ -28,18 +28,17 @@ public class UserController
 {
     protected final UserClient userClient;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
     private SecurityService securityService;
 
     @Autowired
-    public UserController(UserClient userClient, PasswordEncoder passwordEncoder)
+    public UserController(UserClient userClient, PasswordEncoder passwordEncoder,
+                          SecurityService securityService, AuthenticationManager authenticationManager)
     {
         this.userClient = userClient;
         this.passwordEncoder = passwordEncoder;
+        this.securityService = securityService;
+        this.authenticationManager = authenticationManager;
     }
 
     @PostConstruct
@@ -71,25 +70,26 @@ public class UserController
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<String> deleteUser(@RequestHeader HttpHeaders headers, @PathVariable("id") long id)
     {
-        if(securityService.Authenticate(headers)){
-            return userClient.deleteUser(id)
+        if(securityService.Authenticate(headers))
+        {
+            return userClient.deleteUser(headers.getFirst("Authorization"), id)
                     ? ResponseEntity.ok("User deleted")
-                    : ResponseEntity.badRequest().body(String.format("User with id %s does not exist.", id));
+                    : ResponseEntity.badRequest().body("You cannot delete this user");
         }
-        else{
-            return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
-        }
+
+        return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping(path = "")
-    public ResponseEntity<List<User>> getUsers(@RequestHeader HttpHeaders headers, @RequestParam Optional<String> login){
-        if(securityService.Authenticate(headers)){
+    public ResponseEntity<List<User>> getUsers(@RequestHeader HttpHeaders headers, @RequestParam Optional<String> login)
+    {
+        if(securityService.Authenticate(headers))
+        {
             List<User> usersList = userClient.getUsers(login);
             return ResponseEntity.ok(usersList);
         }
-        else{
-            return new ResponseEntity<List<User>>(HttpStatus.UNAUTHORIZED);
-        }
+
+        return new ResponseEntity<List<User>>(HttpStatus.UNAUTHORIZED);
     }
 
     private void authenticate(String username, String password) throws Exception
@@ -107,10 +107,5 @@ public class UserController
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
-
-//    @GetMapping(path="/all")
-//    public List<User> getUsers() {
-//        return userRepository.findAll();
-//    }
 
 }

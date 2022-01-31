@@ -10,7 +10,7 @@ public interface UserClient
     User addUser(User user);
     User updatePassword(User user, String password);
     List<User> getUsers(Optional<String> login);
-    boolean deleteUser(long id);
+    boolean deleteUser(String token, long id);
 
     void setPasswordEncoder(PasswordEncoder passwordEncoder);
 }

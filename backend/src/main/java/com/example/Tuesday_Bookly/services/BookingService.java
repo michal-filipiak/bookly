@@ -9,14 +9,16 @@ import com.example.Tuesday_Bookly.models.bookings.*;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -56,7 +58,7 @@ public class BookingService implements BookingClient{
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        User user = userRepository.findBysecurityToken(token).get();
+        User user = userRepository.findBySecurityToken(token).get();
         BookingDTO booking = new BookingDTO();
 
 
@@ -176,18 +178,26 @@ public class BookingService implements BookingClient{
     }
 
     @Override
-    public List<BookingDTO> getBookings(Optional<Integer> typeFilter, Optional<String> loginFilter)
+    public Page<BookingDTO> getBookings(Optional<Integer> typeFilter, Optional<String> loginFilter,
+                                        String order, int pageNum, int pageSize)
     {
-        if(typeFilter.isPresent())
+        order.toUpperCase(Locale.ROOT);
+        if (order.equals("ASC"))
         {
-            if (loginFilter.isPresent())
-                return bookingRepository.searchByItemTypeAndLogin(typeFilter.get(), loginFilter.get());
-
-            return bookingRepository.findAllByItemType(typeFilter.get());
+            return bookingRepository.findAllByItemTypeAndOrLogin(typeFilter, loginFilter,
+                    PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.ASC, "u.login")));
         }
-        else if (loginFilter.isPresent())
-            return bookingRepository.findAllByLogin(loginFilter.get());
-        return bookingRepository.findAll();
+        else if (order.equals("DESC"))
+        {
+            return bookingRepository.findAllByItemTypeAndOrLogin(typeFilter, loginFilter,
+                    PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "u.login")));
+        }
+
+
+
+
+        log.error("Incorrect ordering parameter");
+        throw new IllegalArgumentException("Incorrect ordering parameter");
     }
 
     @Override
