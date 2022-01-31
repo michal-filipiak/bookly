@@ -28,10 +28,6 @@ export default function Booked({ navigation, route }) {
 
   useEffect(() => {
     getBookings();
-    showMessage({
-      message: "Succesfully cancel booking",
-      type: "success",
-    });
   }, [isFetching]);
 
   async function getBookings() {
@@ -61,6 +57,10 @@ export default function Booked({ navigation, route }) {
         Authorization: route.params.token,
       },
     })
+    showMessage({
+      message: "Succesfully cancel booking",
+      type: "success",
+    });
     setFetching(false);
   }
 
