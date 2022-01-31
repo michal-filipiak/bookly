@@ -56,7 +56,7 @@ export default function FlatDetails({ route, navigation }) {
         setBooked(true);
         setLoading(false);
         showMessage({
-          message: "Succesfully booked car",
+          message: "Succesfully booked flat",
           type: "success",
         });
         navigation.goBack();
