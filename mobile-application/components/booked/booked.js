@@ -17,8 +17,11 @@ export default function Booked({ navigation, route }) {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    getBookings();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      getBookings();
+    })
+    return unsubscribe;
+  }, [navigation]);
 
   async function getBookings() {
     setLoading(true);
