@@ -150,8 +150,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#d8d8d8",
   },
   tinyLogo: {
-    width: 50,
-    height: 50,
+    width: 120,
+    height: 120,
   },
   imageContainer: {
     alignItems: "center",

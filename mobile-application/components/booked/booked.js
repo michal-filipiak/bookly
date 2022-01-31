@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Button } from "react-native-elements";
 
-const BOOKED_URL = "https://bookly.azurewebsites.net/bookings";
+const BOOKED_URL = "https://bookly.azurewebsites.net/bookings/user";
 
 export default function Booked({ navigation, route }) {
   const [dataSource, setDataSource] = useState([]);
