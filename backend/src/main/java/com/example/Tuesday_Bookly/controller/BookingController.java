@@ -24,9 +24,11 @@ public class BookingController
     @Autowired
     private SecurityService securityService;
 
+
     @Autowired
-    public BookingController(BookingClient bookingClient){
+    public BookingController(BookingClient bookingClient, SecurityService securityService){
         this.bookingClient = bookingClient;
+        this.securityService = securityService;
     }
 
     @PostMapping(path = "")
