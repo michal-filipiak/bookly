@@ -16,18 +16,18 @@ public interface BookingRepository extends JpaRepository<BookingDTO, Long>
     @Query(value="SELECT bdto.* FROM BookingDTO bdto join User u on u.Id=bdto.owner_id where u.security_token=?1", nativeQuery = true)
     List<BookingDTO> findAllByOwnerSecurityToken(String token);
 
-    @Query(value="SELECT bdto.* FROM BookingDTO bdto join User u on u.Id=bdto.owner_id where ?1 is null or bdto.item_type = ?1 " +
-                    "and ?2 is null or u.login like ?2% order by u.login ASC",
+    @Query(value="SELECT bdto.* FROM BookingDTO bdto join User u on u.Id=bdto.owner_id where (?1 is null or bdto.item_type = ?1) " +
+                    "and (?2 is null or u.login like ?2%) order by u.login ASC",
             countQuery = "SELECT count(*) FROM (SELECT bdto.* FROM BookingDTO bdto join User u on u.Id=bdto.owner_id where" +
-                    " ?1 is null or bdto.item_type = ?1 and ?2 is null or u.login like ?2%) as val ",
+                    " (?1 is null or bdto.item_type = ?1) and (?2 is null or u.login like ?2%)) as val ",
             nativeQuery = true)
     Page<BookingDTO> findAllByItemTypeAndOrLoginASC(Optional<Integer> type, Optional<String> login, Pageable pageable);
 
 
-    @Query(value="SELECT bdto.* FROM BookingDTO bdto join User u on u.Id=bdto.owner_id where ?1 is null or bdto.item_type = ?1 " +
-            "and ?2 is null or u.login like ?2% order by u.login DESC",
+    @Query(value="SELECT bdto.* FROM BookingDTO bdto join User u on u.Id=bdto.owner_id where (?1 is null or bdto.item_type = ?1) " +
+            "and (?2 is null or u.login like ?2%) order by u.login DESC",
             countQuery = "SELECT count(*) FROM (SELECT bdto.* FROM BookingDTO bdto join User u on u.Id=bdto.owner_id where" +
-                    " ?1 is null or bdto.item_type = ?1 and ?2 is null or u.login like ?2%) as val ",
+                    " (?1 is null or bdto.item_type = ?1) and (?2 is null or u.login like ?2%)) as val ",
             nativeQuery = true)
     Page<BookingDTO> findAllByItemTypeAndOrLoginDESC(Optional<Integer> type, Optional<String> login, Pageable pageable);
 
