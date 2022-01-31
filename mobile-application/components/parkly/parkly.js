@@ -44,14 +44,11 @@ export default function Parkly({ navigation, route }) {
       location: filters.location,
     };
 
-    await fetch(
-      `${PARKS_URL}?${getQueryString(parameters)}`,
-      {
-        headers: {
-          Authorization: route.params.token,
-        },
-      }
-    )
+    await fetch(`${PARKS_URL}?${getQueryString(parameters)}`, {
+      headers: {
+        Authorization: route.params.token,
+      },
+    })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -69,15 +66,15 @@ export default function Parkly({ navigation, route }) {
     getParkly(filters);
     setStartDate(filters.startDate);
     setEndDate(filters.endDate);
-    setLocation(filters.location)
+    setLocation(filters.location);
   }, [filters]);
 
-  useEffect(()=>{
-    const unsubscribe = navigation.addListener('focus', () => {
-     getParkly();
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getParkly();
     });
     return unsubscribe;
-  },[navigation]);
+  }, [navigation]);
 
   return isLoading ? (
     <View style={styles.loadingView}>
@@ -85,7 +82,7 @@ export default function Parkly({ navigation, route }) {
     </View>
   ) : (
     <SafeAreaView style={styles.container}>
-      <ParkingFilter 
+      <ParkingFilter
         startDate={startDate}
         endDate={endDate}
         location={location}
@@ -99,13 +96,16 @@ export default function Parkly({ navigation, route }) {
             location: "",
           })
         }
-        />
+      />
       <FlatList
         data={dataSource}
         renderItem={({ item }) => (
           <View style={[styles.listElement, styles.shadowProp]}>
             <View style={styles.imageContainer}>
-              <Image style={styles.tinyLogo} source={item.photos.length !== 0 ? item.photos[0].path : icon} />
+              <Image
+                style={styles.tinyLogo}
+                source={item.photos.length !== 0 ? item.photos[0].path : icon}
+              />
             </View>
             <View style={styles.contentContainer}>
               <Text style={styles.boldText}>{item.name}</Text>
@@ -117,7 +117,13 @@ export default function Parkly({ navigation, route }) {
                 title="Details"
                 buttonStyle={styles.buttonStyle}
                 containerStyle={styles.buttonContainer}
-                onPress={() => navigation.navigate("ParkingDetails", {item: item, startDate: startDate, endDate: endDate})}
+                onPress={() =>
+                  navigation.navigate("ParkingDetails", {
+                    item: item,
+                    startDate: startDate,
+                    endDate: endDate,
+                  })
+                }
               />
             </View>
           </View>
@@ -159,6 +165,7 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 120,
     height: 120,
+    borderRadius: 4,
   },
   imageContainer: {
     alignItems: "center",

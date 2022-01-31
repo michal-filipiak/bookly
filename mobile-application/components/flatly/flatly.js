@@ -40,7 +40,7 @@ export default function Flatly({ navigation, route }) {
     maxGuests: "",
   });
 
-  useEffect(() => { 
+  useEffect(() => {
     getFlats();
     setStartDate(filters.startDate);
     setEndDate(filters.endDate);
@@ -49,12 +49,12 @@ export default function Flatly({ navigation, route }) {
     setLocation(filters.location);
   }, [filters]);
 
-  useEffect(()=>{
-    const unsubscribe = navigation.addListener('focus', () => {
-     getFlats();
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getFlats();
     });
     return unsubscribe;
-  },[navigation]);
+  }, [navigation]);
 
   async function getFlats() {
     setLoading(true);
@@ -118,7 +118,10 @@ export default function Flatly({ navigation, route }) {
         renderItem={({ item }) => (
           <View style={[styles.listElement, styles.shadowProp]}>
             <View style={styles.imageContainer}>
-              <Image style={styles.tinyLogo} source={icon} />
+              <Image
+                style={styles.tinyLogo}
+                source={item.photos[0] ? item.photos[0] : icon}
+              />
             </View>
             <View style={styles.contentContainer}>
               <Text style={styles.boldText}>{item.name}</Text>
@@ -130,7 +133,13 @@ export default function Flatly({ navigation, route }) {
                 title="Details"
                 buttonStyle={styles.buttonStyle}
                 containerStyle={styles.buttonContainer}
-                onPress={() => navigation.navigate("FlatDetails", {item: item,startDate: startDate, endDate: endDate})}
+                onPress={() =>
+                  navigation.navigate("FlatDetails", {
+                    item: item,
+                    startDate: startDate,
+                    endDate: endDate,
+                  })
+                }
               />
             </View>
           </View>
@@ -170,8 +179,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#d8d8d8",
   },
   tinyLogo: {
-    width: 50,
-    height: 50,
+    width: 120,
+    height: 120,
+    borderRadius: 4,
   },
   imageContainer: {
     alignItems: "center",

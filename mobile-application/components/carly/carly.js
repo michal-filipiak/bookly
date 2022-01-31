@@ -177,8 +177,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#d8d8d8",
   },
   tinyLogo: {
-    width: 50,
-    height: 50,
+    width: 120,
+    height: 120,
+    borderRadius: 4,
   },
   boldText: {
     fontSize: 16,
