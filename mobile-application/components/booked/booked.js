@@ -16,20 +16,17 @@ export default function Booked({ navigation, route }) {
   const [dataSource, setDataSource] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
-  useEffect(() => { 
+  useEffect(() => {
     getBookings();
   }, []);
 
   async function getBookings() {
     setLoading(true);
-    await fetch(
-      BOOKED_URL,
-      {
-        headers: {
-          Authorization: route.params.token,
-        },
-      }
-    )
+    await fetch(BOOKED_URL, {
+      headers: {
+        Authorization: route.params.token,
+      },
+    })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -47,7 +44,7 @@ export default function Booked({ navigation, route }) {
     <View style={styles.loadingView}>
       <ActivityIndicator size="large" />
     </View>
-  ) : (
+  ) : dataSource.length ? (
     <SafeAreaView style={styles.container}>
       <FlatList
         data={dataSource}
@@ -55,11 +52,13 @@ export default function Booked({ navigation, route }) {
           <View style={[styles.listElement, styles.shadowProp]}>
             <View style={styles.leftContentContainer}>
               <Text style={styles.boldText}>Item Type: {item.itemType}</Text>
-              <Text>Start Date Time: {item.startDateTime.substring(0,10)}</Text>
-              <Text>End Date Time: {item.endDateTime.substring(0,10)}</Text>
+              <Text>
+                Start Date Time: {item.startDateTime.substring(0, 10)}
+              </Text>
+              <Text>End Date Time: {item.endDateTime.substring(0, 10)}</Text>
             </View>
             <View style={styles.rightContentContainer}>
-            <Button
+              <Button
                 title="Cancel"
                 buttonStyle={styles.buttonStyle}
                 containerStyle={styles.buttonContainer}
@@ -71,10 +70,18 @@ export default function Booked({ navigation, route }) {
         keyExtractor={(item, index) => index}
       />
     </SafeAreaView>
+  ) : (
+    <View style={styles.loadingView}>
+      <Text style={styles.emptyText}>You have no active bookings!</Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  emptyText: {
+    fontWeight: 600,
+    fontSize: 24,
+  },
   loadingView: {
     height: "100%",
     width: "100%",
