@@ -36,6 +36,8 @@ public class Flat
 
     private int price;
 
+    private List<String> photos;
+
 //    @OneToMany(mappedBy="flat", fetch=FetchType.LAZY)
 //    private List<Image> images;
 

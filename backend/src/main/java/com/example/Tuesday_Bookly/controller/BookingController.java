@@ -83,7 +83,7 @@ public class BookingController
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<String> deleteBooking(@RequestHeader HttpHeaders headers,@PathVariable("id") long id)
+    public ResponseEntity<String> deleteBooking(@RequestHeader HttpHeaders headers, @PathVariable("id") long id)
     {
         if(securityService.Authenticate(headers)){
             return bookingClient.deleteBooking(id)
