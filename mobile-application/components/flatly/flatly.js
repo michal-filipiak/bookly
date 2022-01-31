@@ -110,7 +110,7 @@ export default function Flatly({ navigation, route }) {
               <Image style={styles.tinyLogo} source={icon} />
             </View>
             <View style={styles.contentContainer}>
-              <Text style={styles.boldText}> Name: {item.name}</Text>
+              <Text style={styles.boldText}>{item.name}</Text>
               <Text>Location: {item.location}</Text>
               <Text>Max Guests: {item.maxGuests}</Text>
               <Text>Price: {item.price} PLN</Text>
