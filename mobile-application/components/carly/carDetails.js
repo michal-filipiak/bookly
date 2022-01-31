@@ -52,7 +52,6 @@ export default function CarDetails({ route, navigation }) {
         }
         setBooked(true);
         setLoading(false);
-        console.log(status);
         showMessage({
           message: "Succesfully booked car",
           type: "success",

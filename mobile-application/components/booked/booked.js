@@ -10,11 +10,13 @@ import {
 } from "react-native";
 import { Button } from "react-native-elements";
 
-const BOOKED_URL = "https://bookly.azurewebsites.net/bookings/user";
+const BOOKED_URL_USER = "https://bookly.azurewebsites.net/bookings/user";
+const BOOKED_URL = "https://bookly.azurewebsites.net/bookings";
 
 export default function Booked({ navigation, route }) {
   const [dataSource, setDataSource] = useState([]);
   const [isLoading, setLoading] = useState(true);
+  const [isFetching, setFetching] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -23,9 +25,12 @@ export default function Booked({ navigation, route }) {
     return unsubscribe;
   }, [navigation]);
 
+  useEffect(() => {
+    getBookings();
+  }, [isFetching]);
+
   async function getBookings() {
-    setLoading(true);
-    await fetch(BOOKED_URL, {
+    await fetch(BOOKED_URL_USER, {
       headers: {
         Authorization: route.params.token,
       },
@@ -39,8 +44,19 @@ export default function Booked({ navigation, route }) {
       })
       .then((data) => {
         setDataSource(data);
-        setLoading(false);
+        setLoading(!isLoading);
       });
+  }
+
+  async function removeBooking(id) {
+    setFetching(true);
+    await fetch(`${BOOKED_URL}/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: route.params.token,
+      },
+    })
+    setFetching(false);
   }
 
   return isLoading ? (
@@ -65,6 +81,9 @@ export default function Booked({ navigation, route }) {
                 title="Cancel"
                 buttonStyle={styles.buttonStyle}
                 containerStyle={styles.buttonContainer}
+                onPress={() => {
+                  removeBooking(item.id); 
+                }}
               />
             </View>
           </View>
