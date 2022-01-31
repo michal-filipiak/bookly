@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import ImageSlider from "react-native-image-slider";
 import { Button } from "react-native-elements/dist/buttons/Button";
@@ -11,11 +11,14 @@ export default function CarDetails({ route, navigation }) {
   const [isBooked, setBooked] = useState(false);
 
   const images = {
-    images: [
-      require("../../assets/favicon.png"),
-      require("../../assets/favicon.png"),
-    ],
+    images: [],
   };
+
+  useEffect(() => {
+    route.params.item.images.map((photo) => {
+      images.images.push(photo);
+    })
+  }, []);
 
   async function bookCar() {
     const extraString = "T00:00:00";

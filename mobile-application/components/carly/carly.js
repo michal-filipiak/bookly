@@ -129,7 +129,7 @@ export default function Carly({ navigation, route }) {
         renderItem={({ item }) => (
           <View style={[styles.listElement, styles.shadowProp]}>
             <View style={styles.imageContainer}>
-              <Image style={styles.tinyLogo} source={icon} />
+              <Image style={styles.tinyLogo}  source={item.images[0] ? item.images[0] : icon} />
             </View>
             <View style={styles.contentContainer}>
               <Text style={styles.boldText}>{item.carName}</Text>
