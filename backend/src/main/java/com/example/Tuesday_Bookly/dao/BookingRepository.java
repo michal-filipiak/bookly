@@ -16,5 +16,6 @@ public interface BookingRepository extends JpaRepository<BookingDTO, Long>
     List<BookingDTO> findByitemType(ItemTypeEnum.ItemType type);
     List<BookingDTO> findByowner_login(String login);
 
+    @Query(value="SELECT bdto.* FROM BookingDTO bdto join User u on u.Id=bdto.owner_id where u.security_token=?1", nativeQuery = true)
     List<BookingDTO> findAllByOwnerSecurityToken(String token);
 }
