@@ -66,7 +66,7 @@ public class BookingService implements BookingClient{
         {
             case Car:
             {
-                headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDM2NDcyNDcsImlhdCI6MTY0MzU2MDg0N30.dVX5tyVtmigVBTYfaYUKW3R3I6TS9_LusQOdAUvGexIM-b5jVD_YlmfdaMg2YhAZ85937kZJnVXsRGYutFdZkw");
+                headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDQ1MDYyMDAsImlhdCI6MTY0MzY0MjIwMH0.Z9uusjK1bVh-ppZrv0SGkTa2p-Sbb418kxo1RvU7hbErjR_ngixC-6yJ0lav2_Ru1fdrMiT2pr33QkUxy1Yehw");
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 JSONObject body = new JSONObject();
                 body.put("firstName", user.getFirstName());
