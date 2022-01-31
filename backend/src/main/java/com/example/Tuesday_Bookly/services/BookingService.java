@@ -119,7 +119,7 @@ public class BookingService implements BookingClient{
             }
             case Flat:
             {
-                headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkiLCJleHAiOjE2NDM2MjQ4NDgsImlhdCI6MTY0MzUzODQ0OH0.CzcUyaGveO-gAEnabepX90C8XwQ-BKVqLc4hIUGK2UyFBOP7blrIhNkUyf_i6H8WtHLC-0KE6muk2QaNEfqZHQ");
+                headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkiLCJleHAiOjE2NDM3MTY5OTcsImlhdCI6MTY0MzYzMDU5N30.oONcm_cLgH8ZfNDinPe1RkLUHJXYqpEbg7gcx5ZW0Yz-BQ1UQgd9mmfUm2s05m3OYccDVg45GIxQLMDx33Vnsg");
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 JSONObject body = new JSONObject();
                 body.put("flat", model.getItemId());
