@@ -12,8 +12,7 @@ public interface BookingClient
     BookingDTO updateBooking(long id, BookingDTO booking);
     boolean deleteBooking(long id);
 
-
-
     List<BookingDTO> getBookings(Optional<String> typeFilter, Optional<String> loginFilter);
+    List<BookingDTO> getBookingsForUser(String token);
     Optional<BookingDTO> getBooking(long id);
 }

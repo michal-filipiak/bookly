@@ -25,7 +25,9 @@ public class BookingController
     private SecurityService securityService;
 
     @Autowired
-    public BookingController(BookingClient bookingClient){
+    public BookingController(BookingClient bookingClient, SecurityService securityService)
+    {
+        this.securityService = securityService;
         this.bookingClient = bookingClient;
     }
 
@@ -53,6 +55,20 @@ public class BookingController
             return new ResponseEntity<List<BookingDTO>>(HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @GetMapping(path = "/user")
+    public ResponseEntity<List<BookingDTO>> getBookingsForUser(@RequestHeader HttpHeaders headers)
+    {
+        if(securityService.Authenticate(headers)){
+            String token = headers.getFirst("Authorization");
+            List<BookingDTO> bookings = bookingClient.getBookingsForUser(token);
+            return ResponseEntity.ok(bookings);
+        }
+        else{
+            return new ResponseEntity<List<BookingDTO>>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<BookingDTO> getBooking(@RequestHeader HttpHeaders headers, @PathVariable("id") long id)

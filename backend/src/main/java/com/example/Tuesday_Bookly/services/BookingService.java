@@ -211,6 +211,13 @@ public class BookingService implements BookingClient{
     }
 
     @Override
+    public List<BookingDTO> getBookingsForUser(String token)
+    {
+        List<BookingDTO> bookings;
+        return bookingRepository.findAllByOwnerSecurityToken(token);
+    }
+
+    @Override
     public Optional<BookingDTO> getBooking(long id)
     {
         Optional<BookingDTO> booking = bookingRepository.findById(id);
