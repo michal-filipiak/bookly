@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -93,8 +95,8 @@ public class BookingService implements BookingClient{
                 JSONObject body = new JSONObject();
                 body.put("firstName", user.getFirstName());
                 body.put("lastName", user.getLastName());
-                body.put("startDateTime", model.getStartDate().atZone(ZoneOffset.UTC));
-                body.put("endDateTime", model.getEndDate().atZone(ZoneOffset.UTC));
+                body.put("startDateTime", model.getStartDate().atZone(ZoneOffset.UTC).toString());
+                body.put("endDateTime", model.getEndDate().atZone(ZoneOffset.UTC).toString());
                 body.put("active", 1);
                 body.put("parkingSlot", model.getItemId());
                 body.put("ownerId", user.getId());
