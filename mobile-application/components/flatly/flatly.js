@@ -40,9 +40,21 @@ export default function Flatly({ navigation, route }) {
     maxGuests: "",
   });
 
-  useEffect(() => {
+  useEffect(() => { 
     getFlats();
+    setStartDate(filters.startDate);
+    setEndDate(filters.endDate);
+    setName(filters.name);
+    setGuests(filters.maxGuests);
+    setLocation(filters.location);
   }, [filters]);
+
+  useEffect(()=>{
+    const unsubscribe = navigation.addListener('focus', () => {
+     getFlats();
+    });
+    return unsubscribe;
+  },[navigation]);
 
   async function getFlats() {
     setLoading(true);
