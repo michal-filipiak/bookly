@@ -85,7 +85,6 @@ export default function Flatly({ navigation, route }) {
       .then((data) => {
         setDataSource(data);
         setLoading(false);
-        console.log(data);
       });
   }
 
