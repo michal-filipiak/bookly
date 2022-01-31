@@ -87,15 +87,14 @@ public class BookingService implements BookingClient{
             }
             case ParkingSlot:
             {
-                long x = model.getStartDate().toEpochSecond(ZoneOffset.UTC);
 
                 headers.set("security-header", "a2622aca-27f8-431d-bc53-a4a4fd11a7e6");
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 JSONObject body = new JSONObject();
                 body.put("firstName", user.getFirstName());
                 body.put("lastName", user.getLastName());
-                body.put("startDateTime", model.getStartDate());
-                body.put("endDateTime", model.getEndDate());
+                body.put("startDateTime", model.getStartDate().atZone(ZoneOffset.UTC));
+                body.put("endDateTime", model.getEndDate().atZone(ZoneOffset.UTC));
                 body.put("active", 1);
                 body.put("parkingSlot", model.getItemId());
                 body.put("ownerId", user.getId());
@@ -177,37 +176,16 @@ public class BookingService implements BookingClient{
     @Override
     public List<BookingDTO> getBookings(Optional<String> typeFilter, Optional<String> loginFilter)
     {
-        List<BookingDTO> bookings;
-        if (typeFilter.isPresent() && loginFilter.isEmpty())
+        if(typeFilter.isPresent())
         {
-            ItemTypeEnum.ItemType type;
-            if(typeFilter.equals("Car")){
-                type = ItemTypeEnum.ItemType.Car;
-            }
-            else if(typeFilter.equals("Flat")){
-                type = ItemTypeEnum.ItemType.Flat;
-            }
-            else{
-                type = ItemTypeEnum.ItemType.ParkingSlot;
-            }
-            log.info("Fetching filtered bookings");
-            bookings = bookingRepository.findByitemType(type);
-        }
-        else if(typeFilter.isEmpty() && loginFilter.isPresent()) {
-            log.info("Fetching bookings filtered by login");
-            bookings = bookingRepository.findByowner_login(loginFilter.get());
-        }
-        //TODO: niedokonczony filterbylogin :)
- //       else if(typeFilter.isPresent() && loginFilter.isPresent()){
-//
-  //      }
-        else
-        {
-            log.info("Fetching all bookings");
-            bookings = bookingRepository.findAll();
-        }
+            if (loginFilter.isPresent())
+                return bookingRepository.searchByItemTypeAndLogin(typeFilter.get(), loginFilter.get());
 
-        return bookings;
+            return bookingRepository.findAllByItemType(typeFilter.get());
+        }
+        else if (loginFilter.isPresent())
+            return bookingRepository.findAllByLogin(loginFilter.get());
+        return bookingRepository.findAll();
     }
 
     @Override
