@@ -10,44 +10,23 @@ import {
 } from "react-native";
 import { Button } from "react-native-elements";
 
-export default function Booked({ navigation }) {
+const BOOKED_URL = "https://bookly.azurewebsites.net/bookings";
+
+export default function Booked({ navigation, route }) {
   const [dataSource, setDataSource] = useState([]);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
 
-  const icon = require("../../assets/favicon.png");
-  const BOOKED = {
-    NAMES: ["Car1", "Parking1", "Flat1"],
-    IS_ACTUAL: [true, false, true],
-    STAR_DATE_TIME: ["now", "later", "later"],
-  };
-
-  // useEffect(() => {
-  //   const items = Array.from(
-  //     { length: BOOKED.NAMES.length },
-  //     (_, index) => {
-  //       return {
-  //         name: BOOKED.NAMES[index],
-  //         isActual: BOOKED.IS_ACTUAL[index],
-  //         startDateTime: BOOKED.STAR_DATE_TIME[index],
-  //       };
-  //     }
-  //   );
-  //   setDataSource(items);
-  // }, []);
-
-  const CARS_URL = "http://localhost:8081/cars?startDate=2022-12-30T11:11:11&endDate=2022-12-31T11:11:11";
-  const PARKS_URL = "http://localhost:8081/slots?startDate=2022-12-20T11:11:11&endDate=2022-12-29T11:11:11";
-  const FLAT_URL = "http://localhost:8081/flats";
-
-  useEffect(() => {
+  useEffect(() => { 
     getBookings();
   }, []);
+
   async function getBookings() {
+    setLoading(true);
     await fetch(
-      CARS_URL,
+      BOOKED_URL,
       {
         headers: {
-          Authorization: "123",
+          Authorization: route.params.token,
         },
       }
     )
@@ -59,7 +38,8 @@ export default function Booked({ navigation }) {
         }
       })
       .then((data) => {
-        console.log(data);
+        setDataSource(data);
+        setLoading(false);
       });
   }
 
@@ -73,14 +53,17 @@ export default function Booked({ navigation }) {
         data={dataSource}
         renderItem={({ item }) => (
           <View style={[styles.listElement, styles.shadowProp]}>
-            <View style={styles.imageContainer}>
-              <Image style={styles.tinyLogo} source={icon} />
+            <View style={styles.leftContentContainer}>
+              <Text style={styles.boldText}>Item Type: {item.itemType}</Text>
+              <Text>Start Date Time: {item.startDateTime.substring(0,10)}</Text>
+              <Text>End Date Time: {item.endDateTime.substring(0,10)}</Text>
             </View>
-            <View style={styles.contentContainer}>
-              <Text style={styles.boldText}>{item.name}</Text>
-              <Text>Item: : {item.name}</Text>
-              <Text>isActual: {item.isActual}</Text>
-              <Text>startDateTime: {item.startDateTime}</Text>
+            <View style={styles.rightContentContainer}>
+            <Button
+                title="Cancel"
+                buttonStyle={styles.buttonStyle}
+                containerStyle={styles.buttonContainer}
+              />
             </View>
           </View>
         )}
@@ -129,18 +112,24 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "#d8d8d8",
   },
-  contentContainer: {
-    width: "60%",
+  leftContentContainer: {
+    width: "50%",
     height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: "left",
+    justifyContent: "left",
+  },
+  rightContentContainer: {
+    width: "50%",
+    height: "100%",
+    alignItems: "right",
+    justifyContent: "right",
   },
   buttonStyle: {
-    backgroundColor: "rgba(78, 116, 289, 1)",
+    backgroundColor: "rgba(174,0,0,1)",
     borderRadius: 3,
   },
   buttonContainer: {
-    width: 200,
+    width: 120,
     marginHorizontal: 50,
     marginVertical: 10,
   },
