@@ -12,11 +12,11 @@ export default function CarFilter(props) {
   const [carName, setCarName] = useState(props.carName);
 
   function validateChangedData() {
-    const isValid = validateDate(dateFrom) && validateDate(dateTo);
+    const isValid = validateDate(dateFrom) && validateDate(dateTo) && new Date(dateFrom) < new Date(dateTo);
 
     if (!isValid) {
       showMessage({
-        message: "Invalid date format or dates are not entered! (YYYY-MM-DD)",
+        message: "Invalid date format or dates are not entered! Date From must be smaller then Date To (YYYY-MM-DD)",
         type: "warning",
       });
     }

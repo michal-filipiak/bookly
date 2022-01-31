@@ -72,6 +72,13 @@ export default function Parkly({ navigation, route }) {
     setLocation(filters.location)
   }, [filters]);
 
+  useEffect(()=>{
+    const unsubscribe = navigation.addListener('focus', () => {
+     getParkly();
+    });
+    return unsubscribe;
+  },[navigation]);
+
   return isLoading ? (
     <View style={styles.loadingView}>
       <ActivityIndicator size="large" />

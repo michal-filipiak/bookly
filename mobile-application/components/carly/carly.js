@@ -42,13 +42,20 @@ export default function Carly({ navigation, route }) {
   });
 
   useEffect(() => {
-    getCars(filters);
+    getCars();
     setStartDate(filters.startDate);
     setEndDate(filters.endDate);
     setCarName(filters.carName);
     setCarModel(filters.carModel);
     setLocation(filters.location);
   }, [filters]);
+
+  useEffect(()=>{
+    const unsubscribe = navigation.addListener('focus', () => {
+     getCars();
+    });
+    return unsubscribe;
+  },[navigation]);
 
   //   useEffect(() => {
   //     getCars(filters);
@@ -58,7 +65,7 @@ export default function Carly({ navigation, route }) {
   //   setCount(paginationCount+1);
   // }
 
-  async function getCars(filters) {
+  async function getCars() {
     setLoading(true);
     const extraStringToDate = "T00:00:00";
 
