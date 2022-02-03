@@ -1,0 +1,569 @@
+{
+	"info": {
+		"_postman_id": "92fe6326-2074-463f-b404-3013d084e65d",
+		"name": "Bookly",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "ADD",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "cf6kmRcRsLTe989qM1W-EdBqVCNpBw6i",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"itemId\":6,\r\n    \"itemType\": \"Flat\",\r\n    \"startDate\": \"2022-01-31T00:00:00\",\r\n    \"endDate\": \"2022-02-06T00:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://bookly.azurewebsites.net/bookings",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "cf6kmRcRsLTe989qM1W-EdBqVCNpBw6i",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://bookly.azurewebsites.net/bookings?pageNum=0&typeFilter=10&order=ASC&pageSize=5&loginFilter=adm",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"bookings"
+							],
+							"query": [
+								{
+									"key": "pageNum",
+									"value": "0"
+								},
+								{
+									"key": "typeFilter",
+									"value": "10"
+								},
+								{
+									"key": "order",
+									"value": "ASC"
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "loginFilter",
+									"value": "adm"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ONE",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "0tRFo_-RTR-XcGxaw75RQikVVkp2x3dY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://bookly.azurewebsites.net/bookings/user",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"bookings",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bookings/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bookings",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://bookly.azurewebsites.net/bookings/29",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"bookings",
+								"29"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "ADD",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"test\",\r\n    \"lastName\": \"test\",\r\n    \"login\": \"123\",\r\n    \"password\": \"asdasdasdasdadad\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://bookly.azurewebsites.net/users/add",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"users",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LOGIN",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "0tRFo_-RTR-XcGxaw75RQikVVkp2x3dY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\": \"admin\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://bookly.azurewebsites.net/users/login",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "aD_cxrbDSvlr0vyVhEGAjJBrwT_LF384",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://bookly.azurewebsites.net/users/73",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"users",
+								"73"
+							],
+							"query": [
+								{
+									"key": "login",
+									"value": "admi",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "0tRFo_-RTR-XcGxaw75RQikVVkp2x3dY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cars",
+			"item": [
+				{
+					"name": "GET ALL",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "0tRFo_-RTR-XcGxaw75RQikVVkp2x3dY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://bookly.azurewebsites.net/cars?startDate=2022-07-30T00:00:00&endDate=2022-08-05T00:00:00&carModel=10&carName=Test",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"cars"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2022-07-30T00:00:00"
+								},
+								{
+									"key": "endDate",
+									"value": "2022-08-05T00:00:00"
+								},
+								{
+									"key": "carModel",
+									"value": "10"
+								},
+								{
+									"key": "carName",
+									"value": "Test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ONE",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "0tRFo_-RTR-XcGxaw75RQikVVkp2x3dY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://bookly.azurewebsites.net/cars/584",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"cars",
+								"584"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ParkingSlots",
+			"item": [
+				{
+					"name": "GET ALL",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "_5LzqHyQO3MQlsKiL-r1TQsJaj_HB71j",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost/slots?startDate=2022-01-20T11:11:11&endDate=2022-01-29T11:11:11",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"slots"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2022-01-20T11:11:11"
+								},
+								{
+									"key": "endDate",
+									"value": "2022-01-29T11:11:11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ONE",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "ENV1DL6jU5oji9Z0_QQ_NNN0XwaZLvIA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://bookly.azurewebsites.net:8080/slots/1",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"port": "8080",
+							"path": [
+								"slots",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Flats",
+			"item": [
+				{
+					"name": "GET ALL",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "0tRFo_-RTR-XcGxaw75RQikVVkp2x3dY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"bookly\",\r\n    \"password\": \"react69\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://bookly.azurewebsites.net/flats",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"flats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ONE",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "ENV1DL6jU5oji9Z0_QQ_NNN0XwaZLvIA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://bookly.azurewebsites.net:8080/flats/1",
+							"protocol": "https",
+							"host": [
+								"bookly",
+								"azurewebsites",
+								"net"
+							],
+							"port": "8080",
+							"path": [
+								"flats",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

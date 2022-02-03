@@ -9,6 +9,10 @@ import com.example.Tuesday_Bookly.models.bookings.*;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -54,7 +58,7 @@ public class BookingService implements BookingClient{
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        User user = userRepository.findBysecurityToken(token).get();
+        User user = userRepository.findBySecurityToken(token).get();
         BookingDTO booking = new BookingDTO();
 
 
@@ -62,7 +66,7 @@ public class BookingService implements BookingClient{
         {
             case Car:
             {
-                headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDM1NTczMjYsImlhdCI6MTY0MzQ3MDkyNn0.YPjsaecbpFkuyDt5pAyeKe3gLcmX_1y9jM08qLQ3XmeHNjHC6WcTA9gIT-KikQRNUteVBAqDe3MEFWf9L2aFYw");
+                headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkxMjMiLCJleHAiOjE2NDQ1MDYyMDAsImlhdCI6MTY0MzY0MjIwMH0.Z9uusjK1bVh-ppZrv0SGkTa2p-Sbb418kxo1RvU7hbErjR_ngixC-6yJ0lav2_Ru1fdrMiT2pr33QkUxy1Yehw");
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 JSONObject body = new JSONObject();
                 body.put("firstName", user.getFirstName());
@@ -87,15 +91,14 @@ public class BookingService implements BookingClient{
             }
             case ParkingSlot:
             {
-                long x = model.getStartDate().toEpochSecond(ZoneOffset.UTC);
 
                 headers.set("security-header", "a2622aca-27f8-431d-bc53-a4a4fd11a7e6");
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 JSONObject body = new JSONObject();
                 body.put("firstName", user.getFirstName());
                 body.put("lastName", user.getLastName());
-                body.put("startDateTime", model.getStartDate());
-                body.put("endDateTime", model.getEndDate());
+                body.put("startDateTime", model.getStartDate().atZone(ZoneOffset.UTC).toString());
+                body.put("endDateTime", model.getEndDate().atZone(ZoneOffset.UTC).toString());
                 body.put("active", 1);
                 body.put("parkingSlot", model.getItemId());
                 body.put("ownerId", user.getId());
@@ -116,7 +119,7 @@ public class BookingService implements BookingClient{
             }
             case Flat:
             {
-                headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkiLCJleHAiOjE2NDM2MjQ4NDgsImlhdCI6MTY0MzUzODQ0OH0.CzcUyaGveO-gAEnabepX90C8XwQ-BKVqLc4hIUGK2UyFBOP7blrIhNkUyf_i6H8WtHLC-0KE6muk2QaNEfqZHQ");
+                headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkiLCJleHAiOjE2NDM3MTY5OTcsImlhdCI6MTY0MzYzMDU5N30.oONcm_cLgH8ZfNDinPe1RkLUHJXYqpEbg7gcx5ZW0Yz-BQ1UQgd9mmfUm2s05m3OYccDVg45GIxQLMDx33Vnsg");
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 JSONObject body = new JSONObject();
                 body.put("flat", model.getItemId());
@@ -175,39 +178,31 @@ public class BookingService implements BookingClient{
     }
 
     @Override
-    public List<BookingDTO> getBookings(Optional<String> typeFilter, Optional<String> loginFilter)
+    public Page<BookingDTO> getBookings(Optional<Integer> typeFilter, Optional<String> loginFilter,
+                                        String order, int pageNum, int pageSize)
     {
-        List<BookingDTO> bookings;
-        if (typeFilter.isPresent() && loginFilter.isEmpty())
+        order.toUpperCase(Locale.ROOT);
+        if (order.equals("ASC"))
         {
-            ItemTypeEnum.ItemType type;
-            if(typeFilter.equals("Car")){
-                type = ItemTypeEnum.ItemType.Car;
-            }
-            else if(typeFilter.equals("Flat")){
-                type = ItemTypeEnum.ItemType.Flat;
-            }
-            else{
-                type = ItemTypeEnum.ItemType.ParkingSlot;
-            }
-            log.info("Fetching filtered bookings");
-            bookings = bookingRepository.findByitemType(type);
+            return bookingRepository.findAllByItemTypeAndOrLoginASC(typeFilter, loginFilter, PageRequest.of(pageNum, pageSize));
         }
-        else if(typeFilter.isEmpty() && loginFilter.isPresent()) {
-            log.info("Fetching bookings filtered by login");
-            bookings = bookingRepository.findByowner_login(loginFilter.get());
-        }
-        //TODO: niedokonczony filterbylogin :)
- //       else if(typeFilter.isPresent() && loginFilter.isPresent()){
-//
-  //      }
-        else
+        else if (order.equals("DESC"))
         {
-            log.info("Fetching all bookings");
-            bookings = bookingRepository.findAll();
+            return bookingRepository.findAllByItemTypeAndOrLoginDESC(typeFilter, loginFilter, PageRequest.of(pageNum, pageSize));
         }
 
-        return bookings;
+
+
+
+        log.error("Incorrect ordering parameter");
+        throw new IllegalArgumentException("Incorrect ordering parameter");
+    }
+
+    @Override
+    public List<BookingDTO> getBookingsForUser(String token)
+    {
+        List<BookingDTO> bookings;
+        return bookingRepository.findAllByOwnerSecurityToken(token);
     }
 
     @Override

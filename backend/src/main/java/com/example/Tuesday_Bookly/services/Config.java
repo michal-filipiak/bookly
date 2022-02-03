@@ -1,5 +1,6 @@
 package com.example.Tuesday_Bookly.services;
 
+import com.example.Tuesday_Bookly.dao.BookingRepository;
 import com.example.Tuesday_Bookly.dao.UserRepository;
 import com.example.Tuesday_Bookly.utils.LocalDateFormatter;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +45,9 @@ public class Config implements  WebMvcConfigurer{
     }
 
     @Bean
-    public UserClient userClient(UserRepository userRepository)
+    public UserClient userClient(UserRepository userRepository, BookingRepository bookingRepository)
     {
-        return new UserService(userRepository);
+        return new UserService(userRepository, bookingRepository);
     }
 
 
@@ -58,7 +59,7 @@ public class Config implements  WebMvcConfigurer{
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/*").allowedMethods("");
+        registry.addMapping("/**").allowedMethods("GET","POST","PUT", "DELETE");
     }
 
 

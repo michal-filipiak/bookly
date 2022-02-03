@@ -20,16 +20,22 @@ const Filter = (props: any) => {
   const carOption = () => {
     props.bookingTypeSetter("Car");
     props.methodSetter("filter");
+    props.setFilterOpenState();
+    setActiveFilterMethod("");
     setAnchorEl(null);
   };
   const flatOption = () => {
     props.bookingTypeSetter("Flat");
     props.methodSetter("filter");
+    props.setFilterOpenState();
+    setActiveFilterMethod("");
     setAnchorEl(null);
   };
   const parkingOption = () => {
-    props.bookingTypeSetter("Parking");
+    props.bookingTypeSetter("Slot");
     props.methodSetter("filter");
+    props.setFilterOpenState();
+    setActiveFilterMethod("");
     setAnchorEl(null);
   };
   const userMethod = () => {
@@ -59,11 +65,18 @@ const Filter = (props: any) => {
   return (
     <div>
       <Dialog open={props.filterOpen} onClose={ButtonWork}>
-        <DialogTitle style={{ background: "black", color: "antiquewhite" }}>
-          Filter bookings
+        <DialogTitle
+          style={{
+            background: "black",
+            color: "white",
+            fontSize: 14,
+            fontWeight: "lighter",
+          }}
+        >
+          FILTER BOOKINGS
         </DialogTitle>
-        <DialogContent style={{ background: "antiquewhite" }}>
-          <DialogContentText></DialogContentText>
+        <DialogContent style={{ background: "white" }}>
+          {/* <DialogContentText></DialogContentText> */}
           <TextField
             disabled={activeFilterMethod === "User" ? false : true}
             autoFocus

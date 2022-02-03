@@ -42,7 +42,7 @@ public class FlatController
         {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkiLCJleHAiOjE2NDM2MjQ4NDgsImlhdCI6MTY0MzUzODQ0OH0.CzcUyaGveO-gAEnabepX90C8XwQ-BKVqLc4hIUGK2UyFBOP7blrIhNkUyf_i6H8WtHLC-0KE6muk2QaNEfqZHQ");
+            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkiLCJleHAiOjE2NDM3MTY5OTcsImlhdCI6MTY0MzYzMDU5N30.oONcm_cLgH8ZfNDinPe1RkLUHJXYqpEbg7gcx5ZW0Yz-BQ1UQgd9mmfUm2s05m3OYccDVg45GIxQLMDx33Vnsg");
             HttpEntity<Void> entity = new HttpEntity<>(headers);
             UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl("https://pw-flatly.herokuapp.com/api/flats");
 
@@ -69,7 +69,7 @@ public class FlatController
         if(securityService.Authenticate(httpHeaders)){
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkiLCJleHAiOjE2NDM2MjQ4NDgsImlhdCI6MTY0MzUzODQ0OH0.CzcUyaGveO-gAEnabepX90C8XwQ-BKVqLc4hIUGK2UyFBOP7blrIhNkUyf_i6H8WtHLC-0KE6muk2QaNEfqZHQ");
+            headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29rbHkiLCJleHAiOjE2NDM3MTY5OTcsImlhdCI6MTY0MzYzMDU5N30.oONcm_cLgH8ZfNDinPe1RkLUHJXYqpEbg7gcx5ZW0Yz-BQ1UQgd9mmfUm2s05m3OYccDVg45GIxQLMDx33Vnsg");
             HttpEntity<Void> entity = new HttpEntity<>(headers);
             String stringURL = "https://pw-flatly.herokuapp.com/api/flats/" + id;
             UriComponentsBuilder url = UriComponentsBuilder.fromHttpUrl(stringURL);

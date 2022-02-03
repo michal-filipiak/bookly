@@ -1,5 +1,6 @@
 package com.example.Tuesday_Bookly.models;
 
+import com.example.Tuesday_Bookly.models.bookings.BookingDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data

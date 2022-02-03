@@ -12,13 +12,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Flat
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private String name;
@@ -38,6 +35,8 @@ public class Flat
     private String location;
 
     private int price;
+
+    private List<String> photos;
 
 //    @OneToMany(mappedBy="flat", fetch=FetchType.LAZY)
 //    private List<Image> images;

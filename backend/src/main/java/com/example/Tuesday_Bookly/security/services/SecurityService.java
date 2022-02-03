@@ -3,12 +3,10 @@ package com.example.Tuesday_Bookly.security.services;
 import com.example.Tuesday_Bookly.dao.UserRepository;
 import com.example.Tuesday_Bookly.models.User;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,7 +21,7 @@ public class SecurityService implements UserDetailsService {
     public boolean Authenticate(HttpHeaders headers)
     {
         String token = headers.getFirst("Authorization");
-        return userRepository.existsBysecurityToken(token);
+        return userRepository.existsBySecurityToken(token);
     }
 
     @Override

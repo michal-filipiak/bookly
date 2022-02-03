@@ -5,17 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Data;
 import javax.persistence.*;
+import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Car
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long carId;
 
     private String carName;
@@ -34,7 +32,5 @@ public class Car
 
     private String description;
 
-//    @OneToMany(mappedBy="car", fetch=FetchType.LAZY)
-//    private List<Image> images;
-
+    private List<String> images;
 }
