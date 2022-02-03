@@ -31,9 +31,20 @@ const Register: React.FC<RegisterViewProps> = (props: RegisterViewProps) => {
       login: username,
       password: password,
     };
-    axios.post("http://localhost:8080/users/add", data).then((result) => {
-      console.log(result.data);
-    });
+    axios
+      .post("https://bookly.azurewebsites.net/users/add", data)
+      .then((result) => {
+        console.log(result.data);
+        setSubmitted(true);
+        setError(false);
+        setName("");
+        setSurname("");
+        setUsername("");
+        setPassword("");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   // Handling the form submission
@@ -42,9 +53,11 @@ const Register: React.FC<RegisterViewProps> = (props: RegisterViewProps) => {
     if (name === "" || password === "" || surname === "" || username === "") {
       setError(true);
     } else {
-      setSubmitted(true);
-      setError(false);
       Registration(event);
+
+      setTimeout(() => {
+        props.setAddUser(false);
+      }, 1.5 * 1000);
     }
   };
 
@@ -111,6 +124,7 @@ const Register: React.FC<RegisterViewProps> = (props: RegisterViewProps) => {
               required
               fullWidth
               variant="standard"
+              value={name}
               helperText="Please enter your name"
               onChange={(event) => {
                 setName(event.target.value);
@@ -123,6 +137,7 @@ const Register: React.FC<RegisterViewProps> = (props: RegisterViewProps) => {
             <TextField
               required
               fullWidth
+              value={surname}
               variant="standard"
               helperText="Please enter your surname"
               onChange={(event) => {
@@ -136,6 +151,7 @@ const Register: React.FC<RegisterViewProps> = (props: RegisterViewProps) => {
             <TextField
               required
               fullWidth
+              value={username}
               variant="standard"
               helperText="Please enter your username"
               onChange={(event) => {
@@ -149,6 +165,7 @@ const Register: React.FC<RegisterViewProps> = (props: RegisterViewProps) => {
             <TextField
               required
               fullWidth
+              value={password}
               variant="standard"
               type="password"
               helperText="Please enter your password"
@@ -164,7 +181,7 @@ const Register: React.FC<RegisterViewProps> = (props: RegisterViewProps) => {
             sx={{ borderRadius: 0 }}
             onClick={handleSubmit}
           >
-            Enter
+            Register
           </Button>
           <Button
             type="reset"

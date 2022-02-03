@@ -11,9 +11,10 @@ import BookedData from "./BookedData";
 import { useState } from "react";
 import FetchByFilter from "./FetchByFilter";
 import { PortraitSharp } from "@mui/icons-material";
+
 //import "./BookedTable.css";
 const BookedTable = (props: any) => {
-  const [url, setUrl] = useState("https://fakestoreapi.com/products");
+  const [url, setUrl] = useState("https://bookly.azurewebsites.net/bookings");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [option, setOption] = useState("");
   const [username, setUsername] = useState(""); //username here is used for sorting, incase of filter, the username will be passed as props, same with booking type.
@@ -33,61 +34,80 @@ const BookedTable = (props: any) => {
   };
   const getFilteringField = () => {
     if (props.usernameToFilter !== "") return props.usernameToFilter;
-    else if (props.bookingTypeToFilter !== "") return props.bookingTypeToFilter;
-    else return "";
+    else if (props.bookingTypeToFilter !== "") {
+      const iten = props.bookingTypeToFilter;
+      if (iten === "Car") return 0;
+      if (iten === "Flat") return 1;
+      if (iten === "Slot") return 2;
+    } else return "";
   };
   return (
-    <TableContainer component={Paper} style={{ marginTop: "2rem" }}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow hover>
-            <TableCell style={{ textAlign: "center" }}>Owner ID</TableCell>
-            <TableCell style={{ textAlign: "center" }}>Username</TableCell>
-            <TableCell style={{ textAlign: "center" }}>Booking ID</TableCell>
-            <TableCell style={{ textAlign: "center" }}>Booking Date</TableCell>
-            <TableCell style={{ textAlign: "center" }}>
-              Booking status
-            </TableCell>
-            <TableCell>
-              Booking type
-              <Button
-                variant="text"
-                style={{
-                  maxWidth: "1px",
-                  height: "30px",
-                }}
-                onClick={handleClick}
-                aria-controls={open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-              >
-                ▼
-              </Button>
-              <Sort
-                handleClick={handleClick}
-                handleClose={handleClose}
-                open={open}
-                anchorEl={anchorEl}
-                optionSetter={optionSetter}
-                usernameSetter={usernameSetter}
-              ></Sort>
-            </TableCell>
-            {/* <TableCell>Actions</TableCell>*/}
-          </TableRow>
-        </TableHead>
+    <div style={{ width: "90%", margin: "auto" }}>
+      <TableContainer
+        component={Paper}
+        className="tablecontainer"
+        style={{ borderRadius: 0 }}
+      >
+        <Table size="small" className="table">
+          <TableHead>
+            <TableRow hover>
+              <TableCell className="tablecellheader" style={{ color: "white" }}>
+                OWNER ID
+              </TableCell>
+              <TableCell className="tablecellheader" style={{ color: "white" }}>
+                USERNAME
+              </TableCell>
+              <TableCell className="tablecellheader" style={{ color: "white" }}>
+                BOOKING ID
+              </TableCell>
+              <TableCell className="tablecellheader" style={{ color: "white" }}>
+                BOOKING DATE
+              </TableCell>
+              <TableCell className="tablecellheader" style={{ color: "white" }}>
+                BOOKING STATUS
+              </TableCell>
+              <TableCell className="tablecellheader" style={{ color: "white" }}>
+                BOOKING TYPE
+                {/* <Button
+                  variant="text"
+                  style={{
+                    maxWidth: "1px",
+                    height: "30px",
+                    color: "white",
+                  }}
+                  onClick={handleClick}
+                  aria-controls={open ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                >
+                  ▼
+                </Button> */}
+                <Sort
+                  handleClick={handleClick}
+                  handleClose={handleClose}
+                  open={open}
+                  anchorEl={anchorEl}
+                  optionSetter={optionSetter}
+                  usernameSetter={usernameSetter}
+                ></Sort>
+              </TableCell>
+              {/* <TableCell>Actions</TableCell>*/}
+            </TableRow>
+          </TableHead>
 
-        {props.method === "All" ? (
-          <BookedData option={option} url={url}></BookedData>
-        ) : (
-          <div></div>
-        )}
-        {props.method === "filter" ? (
-          <FetchByFilter type={getFilteringField()}></FetchByFilter>
-        ) : (
-          <div></div>
-        )}
-      </Table>
-    </TableContainer>
+          {props.method === "All" ? (
+            <BookedData option={option} url={url}></BookedData>
+          ) : (
+            <div></div>
+          )}
+          {props.method === "filter" ? (
+            <FetchByFilter type={getFilteringField()}></FetchByFilter>
+          ) : (
+            <div></div>
+          )}
+        </Table>
+      </TableContainer>
+    </div>
   );
 };
 export default BookedTable;
