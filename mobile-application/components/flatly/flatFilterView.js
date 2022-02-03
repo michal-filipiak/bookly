@@ -5,71 +5,88 @@ import validateDate from "../utils/validateDate";
 import { showMessage } from "react-native-flash-message";
 
 export default function FlatFilter(props) {
-  const [dateFrom, setDateFrom] = useState(null);
-  const [dateTo, setDateTo] = useState(null);
-  
-  function resetData() {
-    setDateFrom(null);
-    setDateTo(null);
+  const [name, setName] = useState(props.name);
+  const [maxGuests,setGuests] = useState(props.maxGuests);
+  const [location, setLocation] = useState(props.location);
+  const [dateFrom,setDateFrom] = useState(props.startDate);
+  const [dateTo, setDateTo] = useState(props.endDate);
+
+  function validateChangedData() {
+    const isValid = validateDate(dateFrom) && validateDate(dateTo) && new Date(dateFrom) < new Date(dateTo);
+
+    if (!isValid) {
+      showMessage({
+        message: "Invalid date format or dates are not entered! Date From must be smaller then Date To (YYYY-MM-DD)",
+        type: "warning",
+      });
+    }
+    return isValid;
   }
-   function dataValidation() {
-    validateDate(dateFrom)
-    ? ""
-    : showMessage({
-        message: "Invalid date format! (YYYY-MM-DD)",
-        type: "warning",
-      });
-      validateDate(dateTo)
-    ? ""
-    : showMessage({
-        message: "Invalid date format! (YYYY-MM-DD)",
-        type: "warning",
-      });
-   }
-  return props.isFilterShown ? (
+
+  return (
     <View style={[styles.filterContainer, styles.shadowProp]}>
       <View style={{ flexDirection: "row" }}>
-        <TextInput placeholder="Flat Name" style={styles.leftInput} />
-        <TextInput placeholder="Number Of Guests" style={styles.rightInput} />
+        <TextInput
+          placeholder="From: YYYY-MM-DD"
+          value={dateFrom}
+          style={styles.leftInput}
+          onChangeText={setDateFrom}
+        />
+        <TextInput
+          placeholder="To: YYYY-MM-DD"
+          value={dateTo}
+          style={styles.rightInput}
+          onChangeText={setDateTo}
+        />
       </View>
       <View style={{ flexDirection: "row" }}>
         <TextInput
-          onChangeText={(date) => setDateFrom(date)}
-          placeholder="From: YYYY-MM-DD"
+          placeholder="Flat Name"
           style={styles.leftInput}
+          onChangeText={setName}
+          value={name}
         />
-        <TextInput placeholder="To: YYYY-MM-DD"  onChangeText={(date) => setDateTo(date)} style={styles.rightInput} />
+        <TextInput
+          placeholder="Max Guests"
+          style={styles.rightInput}
+          onChangeText={setGuests}
+          value={maxGuests}
+        />
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        <TextInput
+          placeholder="Location"
+          style={styles.leftInput}
+          onChangeText={setLocation}
+          value={location}
+        />
       </View>
       <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
         <Button
           title="Reset Filters"
           buttonStyle={styles.setFilterButtonStyle}
           containerStyle={styles.buttonContainer}
-          onPress={() => console.log("refetch data")}
+          onPress={() => props.onResetFilters()}
         />
         <Button
           title="Set Filters"
           buttonStyle={styles.setFilterButtonStyle}
           containerStyle={styles.buttonContainer}
           onPress={() => {
-            validateDate(dateFrom)
-              ? ""
-              : showMessage({
-                  message: "Invalid date format! (YYYY-MM-DD)",
-                  type: "warning",
-                });
-                validateDate(dateTo)
-              ? ""
-              : showMessage({
-                  message: "Invalid date format! (YYYY-MM-DD)",
-                  type: "warning",
-                });
+            if (validateChangedData()) {
+              const data = {
+                startDate: dateFrom,
+                endDate: dateTo,
+                location: location,
+                name: name,
+                maxGuests: maxGuests,
+              };
+              props.onSetFilters(data);
+            }
           }}
         />
       </View>
     </View>
-  ) : (
-    <></>
   );
 }
 

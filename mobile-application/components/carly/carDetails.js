@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import ImageSlider from "react-native-image-slider";
 import { Button } from "react-native-elements/dist/buttons/Button";
@@ -11,14 +11,17 @@ export default function CarDetails({ route, navigation }) {
   const [isBooked, setBooked] = useState(false);
 
   const images = {
-    images: [
-      require("../../assets/favicon.png"),
-      require("../../assets/favicon.png"),
-    ],
+    images: [],
   };
 
+  useEffect(() => {
+    route.params.item.images.map((photo) => {
+      images.images.push(photo);
+    })
+  }, []);
+
   async function bookCar() {
-    const extraString= "T:00:00:00";
+    const extraString = "T00:00:00";
     const body = {
       itemId: route.params.item.carId,
       itemType: "Car",
@@ -30,6 +33,8 @@ export default function CarDetails({ route, navigation }) {
       method: "POST",
       headers: {
         Authorization: route.params.token,
+       // Authorization: " Bearer 0tRFo_-RTR-XcGxaw75RQikVVkp2x3dY",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     })
@@ -41,7 +46,7 @@ export default function CarDetails({ route, navigation }) {
         }
       })
       .then((status) => {
-        if(!status) {
+        if (!status) {
           showMessage({
             message: "Failed booking!",
             type: "danger",
@@ -50,7 +55,6 @@ export default function CarDetails({ route, navigation }) {
         }
         setBooked(true);
         setLoading(false);
-        console.log(status);
         showMessage({
           message: "Succesfully booked car",
           type: "success",
@@ -84,17 +88,13 @@ export default function CarDetails({ route, navigation }) {
         <Text style={styles.information}>
           Description: {route.params.item.description}
         </Text>
+        <Text style={styles.information}>
+          From: {route.params.startDate} To: {route.params.endDate}
+        </Text>
         <Button
           title={isBooked ? "Booked" : "Book Car"}
           disabled={isBooked}
-          onPress={() => {
-            bookCar();
-            // showMessage({
-            //   message: "Succesfully booked car",
-            //   type: "success",
-            // });
-            // navigation.goBack();
-          }}
+          onPress={() => bookCar()}
           buttonStyle={styles.buttonStyle}
           containerStyle={styles.createAccountButton}
         />

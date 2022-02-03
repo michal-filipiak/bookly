@@ -9,48 +9,33 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Button } from "react-native-elements";
+import { showMessage } from "react-native-flash-message";
 
-export default function Booked({ navigation }) {
+const BOOKED_URL_USER = "https://bookly.azurewebsites.net/bookings/user";
+const BOOKED_URL = "https://bookly.azurewebsites.net/bookings";
+
+export default function Booked({ navigation, route }) {
   const [dataSource, setDataSource] = useState([]);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
+  const [isFetching, setFetching] = useState(false);
 
-  const icon = require("../../assets/favicon.png");
-  const BOOKED = {
-    NAMES: ["Car1", "Parking1", "Flat1"],
-    IS_ACTUAL: [true, false, true],
-    STAR_DATE_TIME: ["now", "later", "later"],
-  };
-
-  // useEffect(() => {
-  //   const items = Array.from(
-  //     { length: BOOKED.NAMES.length },
-  //     (_, index) => {
-  //       return {
-  //         name: BOOKED.NAMES[index],
-  //         isActual: BOOKED.IS_ACTUAL[index],
-  //         startDateTime: BOOKED.STAR_DATE_TIME[index],
-  //       };
-  //     }
-  //   );
-  //   setDataSource(items);
-  // }, []);
-
-  const CARS_URL = "http://localhost:8081/cars?startDate=2022-12-30T11:11:11&endDate=2022-12-31T11:11:11";
-  const PARKS_URL = "http://localhost:8081/slots?startDate=2022-12-20T11:11:11&endDate=2022-12-29T11:11:11";
-  const FLAT_URL = "http://localhost:8081/flats";
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getBookings();
+    })
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     getBookings();
-  }, []);
+  }, [isFetching]);
+
   async function getBookings() {
-    await fetch(
-      CARS_URL,
-      {
-        headers: {
-          Authorization: "123",
-        },
-      }
-    )
+    await fetch(BOOKED_URL_USER, {
+      headers: {
+        Authorization: route.params.token,
+      },
+    })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -59,28 +44,52 @@ export default function Booked({ navigation }) {
         }
       })
       .then((data) => {
-        console.log(data);
+        setDataSource(data);
+        setLoading(!isLoading);
       });
+  }
+
+  async function removeBooking(id) {
+    setFetching(true);
+    await fetch(`${BOOKED_URL}/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: route.params.token,
+      },
+    })
+    showMessage({
+      message: "Succesfully cancel booking",
+      type: "success",
+    });
+    setFetching(false);
   }
 
   return isLoading ? (
     <View style={styles.loadingView}>
       <ActivityIndicator size="large" />
     </View>
-  ) : (
+  ) : dataSource.length ? (
     <SafeAreaView style={styles.container}>
       <FlatList
         data={dataSource}
         renderItem={({ item }) => (
           <View style={[styles.listElement, styles.shadowProp]}>
-            <View style={styles.imageContainer}>
-              <Image style={styles.tinyLogo} source={icon} />
+            <View style={styles.leftContentContainer}>
+              <Text style={styles.boldText}>Item Type: {item.itemType}</Text>
+              <Text>
+                Start Date Time: {item.startDateTime.substring(0, 10)}
+              </Text>
+              <Text>End Date Time: {item.endDateTime.substring(0, 10)}</Text>
             </View>
-            <View style={styles.contentContainer}>
-              <Text style={styles.boldText}>{item.name}</Text>
-              <Text>Item: : {item.name}</Text>
-              <Text>isActual: {item.isActual}</Text>
-              <Text>startDateTime: {item.startDateTime}</Text>
+            <View style={styles.rightContentContainer}>
+              <Button
+                title="Cancel"
+                buttonStyle={styles.buttonStyle}
+                containerStyle={styles.buttonContainer}
+                onPress={() => {
+                  removeBooking(item.id); 
+                }}
+              />
             </View>
           </View>
         )}
@@ -88,10 +97,18 @@ export default function Booked({ navigation }) {
         keyExtractor={(item, index) => index}
       />
     </SafeAreaView>
+  ) : (
+    <View style={styles.loadingView}>
+      <Text style={styles.emptyText}>You have no active bookings!</Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  emptyText: {
+    fontWeight: 600,
+    fontSize: 24,
+  },
   loadingView: {
     height: "100%",
     width: "100%",
@@ -129,18 +146,24 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "#d8d8d8",
   },
-  contentContainer: {
-    width: "60%",
+  leftContentContainer: {
+    width: "50%",
     height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: "left",
+    justifyContent: "left",
+  },
+  rightContentContainer: {
+    width: "50%",
+    height: "100%",
+    alignItems: "right",
+    justifyContent: "right",
   },
   buttonStyle: {
-    backgroundColor: "rgba(78, 116, 289, 1)",
+    backgroundColor: "rgba(174,0,0,1)",
     borderRadius: 3,
   },
   buttonContainer: {
-    width: 200,
+    width: 120,
     marginHorizontal: 50,
     marginVertical: 10,
   },
