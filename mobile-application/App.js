@@ -58,16 +58,19 @@ export default function App() {
           name="CarDetails"
           component={CarDetails}
           options={{ title: "", headerBackTitle: "Go back from Details" }}
+          initialParams={{ token: token }}
         />
         <Stack.Screen
           name="FlatDetails"
           component={FlatDetails}
           options={{ title: "", headerBackTitle: "Go back from Details" }}
+          initialParams={{ token: token }}
         />
         <Stack.Screen
           name="ParkingDetails"
           component={ParkingDetails}
           options={{ title: "", headerBackTitle: "Go back from Details" }}
+          initialParams={{ token: token }}
         />
       </Stack.Navigator>
     </NavigationContainer>

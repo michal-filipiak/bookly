@@ -42,13 +42,20 @@ export default function Carly({ navigation, route }) {
   });
 
   useEffect(() => {
-    getCars(filters);
+    getCars();
     setStartDate(filters.startDate);
     setEndDate(filters.endDate);
     setCarName(filters.carName);
     setCarModel(filters.carModel);
     setLocation(filters.location);
   }, [filters]);
+
+  useEffect(()=>{
+    const unsubscribe = navigation.addListener('focus', () => {
+     getCars();
+    });
+    return unsubscribe;
+  },[navigation]);
 
   //   useEffect(() => {
   //     getCars(filters);
@@ -58,7 +65,7 @@ export default function Carly({ navigation, route }) {
   //   setCount(paginationCount+1);
   // }
 
-  async function getCars(filters) {
+  async function getCars() {
     setLoading(true);
     const extraStringToDate = "T00:00:00";
 
@@ -122,10 +129,10 @@ export default function Carly({ navigation, route }) {
         renderItem={({ item }) => (
           <View style={[styles.listElement, styles.shadowProp]}>
             <View style={styles.imageContainer}>
-              <Image style={styles.tinyLogo} source={icon} />
+              <Image style={styles.tinyLogo}  source={item.images[0] ? item.images[0] : icon} />
             </View>
             <View style={styles.contentContainer}>
-              <Text>Car Name: {item.carName}</Text>
+              <Text style={styles.boldText}>{item.carName}</Text>
               <Text>Car Model: {item.carModel}</Text>
               <Text>Location: {item.location}</Text>
               <Text>Price: {item.price} PLN</Text>
@@ -170,8 +177,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#d8d8d8",
   },
   tinyLogo: {
-    width: 50,
-    height: 50,
+    width: 120,
+    height: 120,
+    borderRadius: 4,
+  },
+  boldText: {
+    fontSize: 16,
+    fontWeight: "600",
   },
   imageContainer: {
     alignItems: "center",
